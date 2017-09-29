@@ -1,10 +1,8 @@
-
+package mail;
 
 import com.google.api.client.util.Base64;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -21,7 +19,7 @@ public class Sender {
 
   static {
     try {
-      gmail = Quickstart.getGmailService();
+      gmail = GmailServiceProvider.getGmailService();
     } catch (IOException e) {
       throw new RuntimeException("Failed to get the gmail server", e);
     }

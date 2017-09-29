@@ -1,4 +1,4 @@
-
+package mail;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -12,7 +12,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 
 import com.google.api.services.gmail.GmailScopes;
-import com.google.api.services.gmail.model.*;
 import com.google.api.services.gmail.Gmail;
 
 import java.io.IOException;
@@ -21,10 +20,10 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
-public class Quickstart {
+public class GmailServiceProvider {
   /** Application name. */
   private static final String APPLICATION_NAME =
-          "Gmail API Java Quickstart";
+          "Gmail API Java mail.GmailServiceProvider";
 
   /** Directory to store user credentials for this application. */
   private static final java.io.File DATA_STORE_DIR = new java.io.File(
@@ -66,7 +65,7 @@ public class Quickstart {
   public static Credential authorize() throws IOException {
     // Load client secrets.
     InputStream in =
-            Quickstart.class.getResourceAsStream("/client_secret.json");
+            GmailServiceProvider.class.getResourceAsStream("/client_secret.json");
     GoogleClientSecrets clientSecrets =
             GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
@@ -96,23 +95,23 @@ public class Quickstart {
             .build();
   }
 
-  public static void main(String[] args) throws IOException {
-    // Build a new authorized API client service.
-    Gmail service = getGmailService();
-
-    // Print the labels in the user's account.
-    String user = "me";
-    ListLabelsResponse listResponse =
-            service.users().labels().list(user).execute();
-    List<Label> labels = listResponse.getLabels();
-    if (labels.size() == 0) {
-      System.out.println("No labels found.");
-    } else {
-      System.out.println("Labels:");
-      for (Label label : labels) {
-        System.out.printf("- %s\n", label.getName());
-      }
-    }
-  }
+//  public static void main(String[] args) throws IOException {
+//     Build a new authorized API client service.
+//    Gmail service = getGmailService();
+//
+//     Print the labels in the user's account.
+//    String user = "me";
+//    ListLabelsResponse listResponse =
+//            service.users().labels().list(user).execute();
+//    List<Label> labels = listResponse.getLabels();
+//    if (labels.size() == 0) {
+//      System.out.println("No labels found.");
+//    } else {
+//      System.out.println("Labels:");
+//      for (Label label : labels) {
+//        System.out.printf("- %s\n", label.getName());
+//      }
+//    }
+//  }
 
 }
