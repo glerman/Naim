@@ -1,32 +1,27 @@
 package domain;
 
+import parse.TeacherParser;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class TeacherRegistry {
 
+  private final TeacherParser parser;
   private final Map<Integer, Teacher> registry;
 
   public TeacherRegistry() {
+    parser = new TeacherParser();
     registry = new HashMap<>();
   }
 
-  public State register(final Object[] teacherRow) {
-    Teacher teacher = parseTeacher(teacherRow);
-    Teacher prevValue = registry.putIfAbsent(teacher.getId(), teacher);
-
-    if (prevValue == null) {
-      return State.OK;
-    } else {
-      return State.DUPLICATE;
-    }
-  }
-
-  private Teacher parseTeacher(Object[] teacherRow) {
-    return new Teacher(Integer.parseInt((String) teacherRow[0]), (String) teacherRow[1], (String) teacherRow[2]);
+  private void register(final Object[] teacherRow) {
+    Teacher teacher = parser.parse(teacherRow);
+    registry.put(teacher.getId(), teacher);
   }
 
   public void registerAll(final Object[][] teacherRows) {
+
     for (Object[] teacherRow : teacherRows) {
       register(teacherRow);
     }
@@ -36,5 +31,4 @@ public class TeacherRegistry {
     return registry.get(id);
   }
 
-  public enum State {DUPLICATE, OK}
 }

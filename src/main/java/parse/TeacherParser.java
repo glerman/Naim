@@ -6,7 +6,7 @@ public class TeacherParser {
 
   public Teacher parse(Object[] teacherRow) {
 
-    int id = Integer.parseInt((String) teacherRow[0]);
+    int id = Integer.parseInt(((String) teacherRow[0]).trim());
     String name = (String) teacherRow[1];
     String email = (String) teacherRow[2];
 

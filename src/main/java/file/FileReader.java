@@ -20,7 +20,7 @@ public class FileReader {
     }
 
     try {
-      return Files.readLines(file, Charset.forName("UTF-8"));
+      return Files.readLines(file, Charset.forName("utf-16be"));
     } catch (IOException e) {
       throw new RuntimeException("Failed reading file: " + path, e);
     }
