@@ -12,7 +12,7 @@ public class FileReader {
   /**
    * @return the file as a list of lines
    */
-  public List<String> read(final String path) {
+  public List<String> read(final String path, final String charset) {
 
     File file = new File(path);
     if (!file.exists()) {
@@ -20,7 +20,7 @@ public class FileReader {
     }
 
     try {
-      return Files.readLines(file, Charset.forName("utf-16be"));
+      return Files.readLines(file, Charset.forName(charset));
     } catch (IOException e) {
       throw new RuntimeException("Failed reading file: " + path, e);
     }

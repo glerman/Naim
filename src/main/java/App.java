@@ -15,13 +15,16 @@ public class App {
   public static void main(String[] args) throws IOException, MessagingException {
 
     String salariesFilePath = args[1];
-    String teacherFilePath = args[2];
+    String salariesCharset = args[2];
+    String teacherFilePath = args[3];
+    String teacherCharset = args[4];
+
 
     FileReader fileReader = new FileReader();
     CsvParser csvParser = new CsvParser();
 
-    CsvResult parsedSalaries = csvParser.parse(fileReader.read(salariesFilePath));
-    CsvResult parsedTeachers = csvParser.parse(fileReader.read(salariesFilePath));
+    CsvResult parsedSalaries = csvParser.parse(fileReader.read(salariesFilePath, salariesCharset));
+    CsvResult parsedTeachers = csvParser.parse(fileReader.read(salariesFilePath, teacherCharset));
 
     TeacherRegistry teacherRegistry = new TeacherRegistry();
     teacherRegistry.registerAll(parsedTeachers.data);

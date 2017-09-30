@@ -23,7 +23,7 @@ public class CsvParserTest {
   @Test
   public void testSalaries() throws Exception {
 
-    List<String> fileLines = fileReader.read(FilePathProvider.salariesFilePath);
+    List<String> fileLines = fileReader.read(FilePathProvider.salariesFilePath, "UTF-16be");
     CsvResult result = csvParser.parse(fileLines);
 
     Assert.assertEquals(12, result.header.length);
@@ -35,7 +35,7 @@ public class CsvParserTest {
   @Test
   public void testTeachers() throws Exception {
 
-    List<String> fileLines = fileReader.read(FilePathProvider.teachersFilePath);
+    List<String> fileLines = fileReader.read(FilePathProvider.teachersFilePath, "UTF-8");
     CsvResult result = csvParser.parse(fileLines);
 
     Assert.assertEquals(3, result.header.length);
