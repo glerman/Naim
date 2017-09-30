@@ -8,11 +8,15 @@ import parse.CsvResult;
 import file.FileReader;
 
 import javax.mail.MessagingException;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
+import java.nio.file.StandardOpenOption;
+import java.util.Collections;
 import java.util.Map;
+
+import static com.sun.org.apache.xml.internal.serialize.LineSeparator.Unix;
 
 /**
  * Created by glerman on 24/9/17.
@@ -46,19 +50,15 @@ public class App {
       outputTable.printTable(new PrintStream(outputStream), 0);
       try {
         String outputTableStr = outputStream.toString(salariesCharset);
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println(outputTableStr);
-      } catch (UnsupportedEncodingException e) {
-        throw new RuntimeException("Problem with encoding: " + salariesCharset, e);
+        String teacherEmail = teacher.getEmail();
+        Sender.sendMail(
+                "gal.lerman1@gmail.com",
+                "gal.lerman1@gmail.com",
+                "Naim",
+                outputTableStr);
+      } catch (Exception e) {
+        throw new RuntimeException(e);
       }
     });
-
-//    Sender.sendMail(
-//            "ppm21@yandex.ru",
-//            "gal.lerman1@gmail.com",
-//            "Naim",
-//            "kill me :)");
   }
 }
