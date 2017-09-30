@@ -11,7 +11,7 @@ public class CsvParser {
 
     String[] header = Iterables.toArray(Splitter.on(',').split(lines.get(0)), String.class);
     List<String> dataLines = lines.subList(1, lines.size());
-    Object[][] data = new Object[lines.size() - 1][header.length];
+    Object[][] data = new Object[dataLines.size()][header.length];
 
     for (int i = 0; i < dataLines.size(); i++) {
       data[i] = Iterables.toArray(Splitter.on(',').split(dataLines.get(i)), String.class);

@@ -11,17 +11,28 @@ public class SalaryInfo {
   private String date;
   private int attendees;
   private double ratePerAttendee;
+  private Object[] salaryRow;
 
-  public SalaryInfo(int teacherId, String className, String room, String date, int attendees, double ratePerAttendee) {
+  public SalaryInfo(int teacherId, String className, String room,
+                    String date, int attendees, double ratePerAttendee, Object[] salaryRow) {
     this.teacherId = teacherId;
     this.className = className;
     this.room = room;
     this.date = date;
     this.attendees = attendees;
     this.ratePerAttendee = ratePerAttendee;
+    this.salaryRow = salaryRow;
   }
 
   public SalaryInfo() {
+  }
+
+  public Object[] getSalaryRow() {
+    return salaryRow;
+  }
+
+  public void setSalaryRow(Object[] salaryRow) {
+    this.salaryRow = salaryRow;
   }
 
   public int getTeacherId() {
@@ -81,6 +92,7 @@ public class SalaryInfo {
             .add("date", date)
             .add("attendees", attendees)
             .add("ratePerAttendee", ratePerAttendee)
+            .add("salaryRow", salaryRow)
             .toString();
   }
 
@@ -94,11 +106,12 @@ public class SalaryInfo {
             Double.compare(that.ratePerAttendee, ratePerAttendee) == 0 &&
             Objects.equal(className, that.className) &&
             Objects.equal(room, that.room) &&
-            Objects.equal(date, that.date);
+            Objects.equal(date, that.date) &&
+            Objects.equal(salaryRow, that.salaryRow);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(teacherId, className, room, date, attendees, ratePerAttendee);
+    return Objects.hashCode(teacherId, className, room, date, attendees, ratePerAttendee, salaryRow);
   }
 }

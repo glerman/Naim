@@ -38,7 +38,7 @@ public class CsvParserTest {
     List<String> fileLines = fileReader.read(FilePathProvider.teachersFilePath);
     CsvResult result = csvParser.parse(fileLines);
 
-    Assert.assertEquals(2, result.header.length);
+    Assert.assertEquals(3, result.header.length);
     Assert.assertEquals(2, result.data.length);
 
     doTest(result);

@@ -13,6 +13,6 @@ public class SalaryInfoParser {
     int attendees = Integer.parseInt((String) salaryRow[9]);
     Double ratePerAttendee = Double.parseDouble((String) salaryRow[11]);
 
-    return new SalaryInfo(teacherId, className, room, date, attendees, ratePerAttendee);
+    return new SalaryInfo(teacherId, className, room, date, attendees, ratePerAttendee, salaryRow);
   }
 }
