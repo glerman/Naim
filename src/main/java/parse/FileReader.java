@@ -10,9 +10,9 @@ import java.util.List;
 public class FileReader {
 
   /**
-   * @return the file as a list of lines, ignoring the first line (header line)
+   * @return the file as a list of lines
    */
-  public static List<String> read(final String path) {
+  public List<String> read(final String path) {
 
     File file = new File(path);
     if (!file.exists()) {
@@ -20,8 +20,7 @@ public class FileReader {
     }
 
     try {
-      List<String> lines = Files.readLines(file, Charset.forName("UTF-8"));
-      return lines.subList(1, lines.size()); //Skip the header
+      return Files.readLines(file, Charset.forName("UTF-8"));
     } catch (IOException e) {
       throw new RuntimeException("Failed reading file: " + path, e);
     }
