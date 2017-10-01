@@ -28,16 +28,16 @@ public class App {
   private static String message = "הי,\n" +
           "\n" +
           "להלן פירוט תשלומים עבור חודש 09/2017 \n" +
-          "נא לרשום על הקבלה / חשבונית עבור \"נורמל מחקר\" על הסכום הנ״ל \n" +
+          "נא לרשום על הקבלה / חשבונית עבור \"אלה בן אהרון\" על הסכום הנ״ל \n" + //todo: make the name a param
           "(בתוספת מע\"מ במידה וצריך).\n" +
           "\n";
 
   private static String galEmail = "gal.lerman1@gmail.com";
-  private static String naimEmail = "info@naim.org.il";
+  private static String naimEmail = "<info@naim.org.il> סטודיו נעים";
   private static String naimSecret = "client_secret_naim.json";
   private static String galSecret = "client_secret_gal.json";
 
-  private static boolean sendFromNaim = true;
+  private static boolean sendFromNaim = false;
 
   public static void main(String[] args) throws IOException, MessagingException {
 
@@ -69,8 +69,6 @@ public class App {
         problemTeachers.add(teacherName);
         return;
       }
-      String subjectLine = String.format("%s %s", teacher.getName(), subjectSuffix);
-
       sb.append("\n").append(message).append("\n").append("דו\"ח שיעורים\n");
 
       for (TextTable outputTable : teacherOutput.tablePerClass) {
@@ -85,9 +83,10 @@ public class App {
               "facebook.com/stnaim\n" +
               "facebook.com/gymnaim");
 
+      String subjectLine = String.format("%s %s", teacher.getName(), subjectSuffix);
       try {
         sender.sendMail(
-                "gal.lerman1@gmail.com",
+                teacher.getEmail(),
                 sendFromNaim ? naimEmail : galEmail,
                 subjectLine,
                 sb.toString());
@@ -96,7 +95,6 @@ public class App {
         throw new RuntimeException(e);
       }
       System.out.println(sb);//.append("\n").append(subjectLine).append("\n").append(teacher.getName()).append("\n").append(teacher.getEmail()));
-      System.exit(1);
     });
 
     System.out.printf("\n\n");

@@ -26,7 +26,7 @@ public class SalariesLogicTest {
 
     FileReader fileReader = new FileReader();
     CsvParser csvParser = new CsvParser();
-    CsvResult salariesData = csvParser.parse(fileReader.read(FilePathProvider.salariesFilePath_real, "UTF-8"));
+    CsvResult salariesData = csvParser.parse(fileReader.read(FilePathProvider.salariesFilePath, "UTF-8"));
     SalaryInfoParser salaryInfoParser = new SalaryInfoParser();
     groupedSalaryInfo = Lists.newArrayList(salariesData.data).
             stream().
