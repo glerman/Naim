@@ -26,11 +26,11 @@ public class CsvParserTest {
   @Test
   public void testSalaries() throws Exception {
 
-    List<String> fileLines = fileReader.read(FilePathProvider.salariesFilePath, "UTF-8");
+    List<String> fileLines = fileReader.read(FilePathProvider.salariesFilePath_real, "UTF-8");
     CsvResult result = csvParser.parse(fileLines);
 
     Assert.assertEquals(12, result.header.length);
-    Assert.assertEquals(120, result.data.length);
+    Assert.assertEquals(1377, result.data.length);
 
     doTest(result);
   }
@@ -38,11 +38,11 @@ public class CsvParserTest {
   @Test
   public void testTeachers() throws Exception {
 
-    List<String> fileLines = fileReader.read(FilePathProvider.teachersFilePath, "UTF-8");
+    List<String> fileLines = fileReader.read(FilePathProvider.teachersFilePath_real, "UTF-8");
     CsvResult result = csvParser.parse(fileLines);
 
-    Assert.assertEquals(3, result.header.length);
-    Assert.assertEquals(2, result.data.length);
+    Assert.assertEquals(2, result.header.length);
+    Assert.assertEquals(265, result.data.length);
 
     doTest(result);
   }

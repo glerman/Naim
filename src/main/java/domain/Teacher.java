@@ -5,25 +5,15 @@ import com.google.common.base.Objects;
 
 public class Teacher {
 
-  private int id;
   private String name;
   private String email;
 
-  public Teacher(int id, String name, String email) {
-    this.id = id;
+  public Teacher(String name, String email) {
     this.name = name;
     this.email = email;
   }
 
   public Teacher() {
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
   }
 
   public String getName() {
@@ -45,7 +35,6 @@ public class Teacher {
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(this)
-            .add("id", id)
             .add("name", name)
             .add("email", email)
             .toString();
@@ -56,13 +45,12 @@ public class Teacher {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Teacher teacher = (Teacher) o;
-    return id == teacher.id &&
-            Objects.equal(name, teacher.name) &&
+    return Objects.equal(name, teacher.name) &&
             Objects.equal(email, teacher.email);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(id, name, email);
+    return Objects.hashCode(name, email);
   }
 }

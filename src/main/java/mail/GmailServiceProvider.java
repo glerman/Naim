@@ -61,11 +61,12 @@ public class GmailServiceProvider {
    * Creates an authorized Credential object.
    * @return an authorized Credential object.
    * @throws IOException
+   * @param clientSecretFileName
    */
-  public static Credential authorize() throws IOException {
+  public static Credential authorize(String clientSecretFileName) throws IOException {
     // Load client secrets.
     InputStream in =
-            GmailServiceProvider.class.getResourceAsStream("/client_secret.json");
+            GmailServiceProvider.class.getResourceAsStream("/" + clientSecretFileName);
     GoogleClientSecrets clientSecrets =
             GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
@@ -87,9 +88,10 @@ public class GmailServiceProvider {
    * Build and return an authorized Gmail client service.
    * @return an authorized Gmail client service
    * @throws IOException
+   * @param clientSecretFileName
    */
-  public static Gmail getGmailService() throws IOException {
-    Credential credential = authorize();
+  public static Gmail getGmailService(String clientSecretFileName) throws IOException {
+    Credential credential = authorize(clientSecretFileName);
     return new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
             .setApplicationName(APPLICATION_NAME)
             .build();

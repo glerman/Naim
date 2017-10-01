@@ -6,6 +6,7 @@ import com.google.common.base.Objects;
 public class SalaryInfo {
 
   private int teacherId;
+  private String teacherName;
   private String className;
   private String room;
   private String date;
@@ -13,9 +14,10 @@ public class SalaryInfo {
   private double ratePerAttendee;
   private Object[] salaryRow;
 
-  public SalaryInfo(int teacherId, String className, String room,
+  public SalaryInfo(int teacherId, String teacherName, String className, String room,
                     String date, int attendees, double ratePerAttendee, Object[] salaryRow) {
     this.teacherId = teacherId;
+    this.teacherName = teacherName;
     this.className = className;
     this.room = room;
     this.date = date;
@@ -25,6 +27,14 @@ public class SalaryInfo {
   }
 
   public SalaryInfo() {
+  }
+
+  public String getTeacherName() {
+    return teacherName;
+  }
+
+  public void setTeacherName(String teacherName) {
+    this.teacherName = teacherName;
   }
 
   public Object[] getSalaryRow() {
@@ -87,6 +97,7 @@ public class SalaryInfo {
   public String toString() {
     return MoreObjects.toStringHelper(this)
             .add("teacherId", teacherId)
+            .add("teacherName", teacherName)
             .add("className", className)
             .add("room", room)
             .add("date", date)
@@ -104,6 +115,7 @@ public class SalaryInfo {
     return teacherId == that.teacherId &&
             attendees == that.attendees &&
             Double.compare(that.ratePerAttendee, ratePerAttendee) == 0 &&
+            Objects.equal(teacherName, that.teacherName) &&
             Objects.equal(className, that.className) &&
             Objects.equal(room, that.room) &&
             Objects.equal(date, that.date) &&
@@ -112,6 +124,6 @@ public class SalaryInfo {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(teacherId, className, room, date, attendees, ratePerAttendee, salaryRow);
+    return Objects.hashCode(teacherId, teacherName, className, room, date, attendees, ratePerAttendee, salaryRow);
   }
 }

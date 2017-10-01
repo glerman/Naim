@@ -14,18 +14,14 @@ import java.util.Properties;
 
 public class Sender {
 
+  private Gmail gmail;
 
-  private static Gmail gmail;
-
-  static {
-    try {
-      gmail = GmailServiceProvider.getGmailService();
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to get the gmail server", e);
-    }
+  public Sender(final String clientSecretFileName) throws IOException {
+    gmail = GmailServiceProvider.getGmailService(clientSecretFileName);
   }
 
-  public static Message sendMail(String to,
+
+  public Message sendMail(String to,
                                  String from,
                                  String subject,
                                  String bodyText) throws MessagingException, IOException {
