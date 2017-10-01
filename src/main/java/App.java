@@ -26,16 +26,15 @@ public class App {
   public static void main(String[] args) throws IOException, MessagingException {
 
     String salariesFilePath = args[0];
-    String salariesCharset = args[1];
-    String teacherFilePath = args[2];
-    String teacherCharset = args[3];
+    String teacherFilePath = args[1];
+    String charset = args[2];
 
 
     FileReader fileReader = new FileReader();
     CsvParser csvParser = new CsvParser();
 
-    CsvResult parsedSalaries = csvParser.parse(fileReader.read(salariesFilePath, salariesCharset));
-    CsvResult parsedTeachers = csvParser.parse(fileReader.read(teacherFilePath, teacherCharset));
+    CsvResult parsedSalaries = csvParser.parse(fileReader.read(salariesFilePath, charset));
+    CsvResult parsedTeachers = csvParser.parse(fileReader.read(teacherFilePath, charset));
 
     TeacherRegistry teacherRegistry = new TeacherRegistry();
     teacherRegistry.registerAll(parsedTeachers.data);
@@ -49,14 +48,19 @@ public class App {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       outputTable.printTable(new PrintStream(outputStream), 0);
       try {
-        String outputTableStr = outputStream.toString(salariesCharset);
-        String teacherEmail = teacher.getEmail();
-        Sender.sendMail(
-                "gal.lerman1@gmail.com",
-                "gal.lerman1@gmail.com",
-                "Naim",
-                outputTableStr);
-      } catch (Exception e) {
+        String outputTableStr = outputStream.toString(charset);
+//        String teacherEmail = teacher.getEmail();
+
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println(outputTableStr);
+//        Sender.sendMail(
+//                "gal.lerman1@gmail.com",
+//                "gal.lerman1@gmail.com",
+//                "Naim",
+//                outputTableStr);
+      } catch (UnsupportedEncodingException e) {
         throw new RuntimeException(e);
       }
     });

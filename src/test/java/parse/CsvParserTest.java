@@ -1,5 +1,6 @@
 package parse;
 
+import com.google.common.collect.Lists;
 import dnl.utils.text.table.TextTable;
 import file.FileReader;
 import org.junit.Assert;
@@ -10,6 +11,8 @@ import java.util.List;
 
 
 public class CsvParserTest {
+
+  private static final List<Integer> ALLOWED_EMPTY_COLUMNS = Lists.newArrayList(2);
 
   private FileReader fileReader;
   private CsvParser csvParser;
@@ -23,7 +26,7 @@ public class CsvParserTest {
   @Test
   public void testSalaries() throws Exception {
 
-    List<String> fileLines = fileReader.read(FilePathProvider.salariesFilePath, "UTF-16be");
+    List<String> fileLines = fileReader.read(FilePathProvider.salariesFilePath, "UTF-8");
     CsvResult result = csvParser.parse(fileLines);
 
     Assert.assertEquals(12, result.header.length);
@@ -50,7 +53,9 @@ public class CsvParserTest {
       Assert.assertEquals("Data row length is unexpected at row #" + i + "\n" +result.data[i], result.header.length, result.data[i].length);
       for (int j = 0 ; j < result.header.length; j++ ) {
         Assert.assertNotNull("Data element (" + i + "," + j + ") is null", result.data[i][j]);
-        Assert.assertFalse("Data element (" + i + "," + j + ") is empty", ((String)result.data[i][j]).isEmpty());
+        if (!ALLOWED_EMPTY_COLUMNS.contains(j)) {
+          Assert.assertFalse("Data element (" + i + "," + j + ") is empty", ((String)result.data[i][j]).isEmpty());
+        }
       }
     }
     new TextTable(result.header, result.data).printTable();

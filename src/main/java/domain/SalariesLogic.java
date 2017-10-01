@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class SalariesLogic {
 
-  static final String[] OUTPUT_COLUMNS = {"className", "room", "date", "attendees", "ratePerAttendee"};
+  static final String[] OUTPUT_COLUMNS = {"שם כיתה", "אולם", "תאריך", "משתתפים", "תעריף"};
 
   private Multimap<Integer, SalaryInfo> salariesRegistry;
 
