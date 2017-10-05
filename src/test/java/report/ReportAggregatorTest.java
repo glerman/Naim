@@ -36,4 +36,15 @@ public class ReportAggregatorTest {
 
     System.out.println(instance.report());
   }
+
+  @Test
+  public void testTeacherWithoutMail() throws Exception {
+    instance.addTeacherWithoutEmail("teacher1");
+    instance.addTeacherWithoutEmail("teacher2");
+    instance.addTeacherWithoutEmail("teacher3");
+
+    Assert.assertEquals(3, instance.teachersWithoutEmail.size());
+
+    System.out.println(instance.report());
+  }
 }

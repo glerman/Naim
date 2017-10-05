@@ -36,32 +36,31 @@ public class ReportAggregator {
   public String report() {
     StringBuilder report = new StringBuilder();
 
-    reportCollectionLineByLine(report, "App input: ", appInput);
-    reportProblemsCollection(report, "Salary parsing errors: ", "The salary parsing errors were: ", salaryParsingErrors);
-    reportProblemsCollection(report, "Teacher parsing errors: ", "The teacher parsing errors were: ", teacherParsingErrors);
-    reportNumber(report, "Total mails to send: ", numMailsToSend);
-    reportProblemsCollection(report, "Number of teachers without emails (send wasn't attempted): ", "The teachers without emails are: ", teachersWithoutEmail);
-    reportNumber(report, "Send mail attempts: ", sentMailAttempt);
-    reportProblemsCollection(report, "Send mail failures: ", "Problems with sending mails were: ", sendMailProblems);
+    reportCollectionLineByLine(appInput, "App input: ", report);
+    reportProblemsCollection(salaryParsingErrors, "Salary parsing errors: ", "The salary parsing errors were: ", report);
+    reportProblemsCollection(teacherParsingErrors, "Teacher parsing errors: ", "The teacher parsing errors were: ", report);
+    reportNumber(numMailsToSend, "Total mails to send: ", report);
+    reportProblemsCollection(teachersWithoutEmail, "Number of teachers without emails (send wasn't attempted): ", "The teachers without emails are: ", report);
+    reportNumber(sentMailAttempt, "Send mail attempts: ", report);
+    reportProblemsCollection(sendMailProblems, "Send mail failures: ", "Problems with sending mails were: ", report);
     return report.toString();
   }
 
-  private void reportNumber(StringBuilder report, String numberPrefix, Number number) {
-    report.append(numberPrefix).append(number).append("\n");
+  private void reportNumber(Number number, String numberPrefix, StringBuilder report) {
+    report.append(numberPrefix).append(number).append("\n\n");
   }
 
-  private void reportProblemsCollection(StringBuilder report, String sizePrefix, String collectionPrefix, Collection<?> collection) {
+  private void reportProblemsCollection(Collection<?> collection, String sizePrefix, String collectionPrefix, StringBuilder report) {
     report.append(sizePrefix).append(collection.size()).append("\n");
-    reportCollectionLineByLine(report, collectionPrefix, collection);
+    reportCollectionLineByLine(collection, collectionPrefix, report);
   }
 
-  private void reportCollectionLineByLine(StringBuilder report, String collectionPrefix, Collection<?> c) {
-    if (c == null || c.isEmpty()) {
-      return;
-    }
-    report.append(collectionPrefix).append("\n");
-    for (Object o : c) {
-      report.append(o).append("\n");
+  private void reportCollectionLineByLine(Collection<?> c, String collectionPrefix, StringBuilder report) {
+    if (c != null && !c.isEmpty()) {
+      report.append(collectionPrefix).append("\n");
+      for (Object o : c) {
+        report.append("* ").append(o).append("\n");
+      }
     }
     report.append("\n");
   }
