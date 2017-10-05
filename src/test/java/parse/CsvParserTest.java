@@ -6,6 +6,8 @@ import file.FileReader;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import util.FilePathProvider;
+import util.InputReaderHelper;
 
 import java.util.List;
 
@@ -14,20 +16,18 @@ public class CsvParserTest {
 
   private static final List<Integer> ALLOWED_EMPTY_COLUMNS = Lists.newArrayList(2);
 
-  private FileReader fileReader;
   private CsvParser csvParser;
 
   @Before
   public void setUp() throws Exception {
-    fileReader = new FileReader();
     csvParser = new CsvParser();
   }
 
   @Test
   public void testSalaries() throws Exception {
 
-    List<String> fileLines = fileReader.read(FilePathProvider.salariesFilePath, "UTF-8");
-    CsvResult result = csvParser.parse(fileLines);
+    List<String> salaryLines = InputReaderHelper.readLines(FilePathProvider.salariesFilePath);
+    CsvResult result = csvParser.parse(salaryLines);
 
     Assert.assertEquals(12, result.header.length);
     Assert.assertEquals(120, result.data.length);
@@ -38,8 +38,8 @@ public class CsvParserTest {
   @Test
   public void testTeachers() throws Exception {
 
-    List<String> fileLines = fileReader.read(FilePathProvider.teachersFilePath, "UTF-8");
-    CsvResult result = csvParser.parse(fileLines);
+    List<String> teacherLines = InputReaderHelper.readLines(FilePathProvider.teachersFilePath);
+    CsvResult result = csvParser.parse(teacherLines);
 
     Assert.assertEquals(2, result.header.length);
     Assert.assertEquals(2, result.data.length);

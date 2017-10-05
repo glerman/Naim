@@ -1,23 +1,34 @@
 package parse;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import domain.SalaryInfo;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import util.FilePathProvider;
+import util.InputReaderHelper;
 
 public class SalaryInfoParserTest {
 
 
-  @Test
-  public void test() throws Exception {
+  private SalaryInfoParser parser;
+  private CsvResult csvResult;
 
-    String outputDate = getDateOutput("30/08/2017");
-    Assert.assertEquals("30/08", outputDate);
+  @Before
+  public void setUp() throws Exception {
+    parser = new SalaryInfoParser();
+    csvResult = InputReaderHelper.readCsv(FilePathProvider.salariesFilePath);
   }
 
-  private String getDateOutput(String dateStr) {
-    DateTime dateTime = SalaryInfoParser.inputDtf.parseDateTime(dateStr);
-    return SalaryInfoParser.ouputDtf.print(dateTime);
+  @Test
+  public void testDateFormat() throws Exception {
+
+    SalaryInfo salaryInfo = parser.parse(csvResult.data[0]);
+    Assert.assertEquals("02/08", salaryInfo.getDate());
+  }
+
+  @Test
+  public void testAttendees() throws Exception {
+    SalaryInfo salaryInfo = parser.parse(csvResult.data[1]);
+    Assert.assertEquals(4, salaryInfo.getAttendees());
   }
 }

@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import parse.CsvParser;
 import parse.CsvResult;
-import parse.FilePathProvider;
+import util.FilePathProvider;
 import parse.SalaryInfoParser;
 
 import javax.swing.table.TableModel;

@@ -7,8 +7,8 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class SalaryInfoParser {
 
-  public static DateTimeFormatter inputDtf = DateTimeFormat.forPattern("dd/MM/yyyy");
-  public static DateTimeFormatter ouputDtf = DateTimeFormat.forPattern("dd/MM");
+  private static DateTimeFormatter inputDtf = DateTimeFormat.forPattern("dd/MM/yyyy");
+  private static DateTimeFormatter outputDtf = DateTimeFormat.forPattern("dd/MM");
 
   public SalaryInfo parse(final Object[] salaryRow) {
 
@@ -17,8 +17,8 @@ public class SalaryInfoParser {
     String className = ((String) salaryRow[4]).trim();
     String room = ((String) salaryRow[5]).trim();
     String date = ((String) salaryRow[7]).trim();
-    String storedDate = ouputDtf.print(inputDtf.parseDateTime(date));
-    int attendees = Integer.parseInt(((String) salaryRow[9]).trim());
+    String storedDate = outputDtf.print(inputDtf.parseDateTime(date));
+    int attendees = Integer.parseInt(((String) salaryRow[10]).trim());
     Double ratePerAttendee = Double.parseDouble(((String) salaryRow[11]).trim());
 
     return new SalaryInfo(teacherId, teacherName, className, room, storedDate, attendees, ratePerAttendee, salaryRow);
