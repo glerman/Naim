@@ -19,7 +19,7 @@ public class SalaryInfoParser {
     String date = ((String) salaryRow[7]).trim();
     String storedDate = outputDtf.print(inputDtf.parseDateTime(date));
     int attendees = Integer.parseInt(((String) salaryRow[10]).trim());
-    Double ratePerAttendee = Double.parseDouble(((String) salaryRow[11]).trim());
+    Integer ratePerAttendee = Integer.parseInt(((String) salaryRow[11]).trim());
 
     return new SalaryInfo(teacherId, teacherName, className, room, storedDate, attendees, ratePerAttendee, salaryRow);
   }

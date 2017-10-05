@@ -11,18 +11,18 @@ public class SalaryInfo {
   private String room;
   private String date;
   private int attendees;
-  private double ratePerAttendee;
+  private int payment;
   private Object[] salaryRow;
 
   public SalaryInfo(int teacherId, String teacherName, String className, String room,
-                    String date, int attendees, double ratePerAttendee, Object[] salaryRow) {
+                    String date, int attendees, int payment, Object[] salaryRow) {
     this.teacherId = teacherId;
     this.teacherName = teacherName;
     this.className = className;
     this.room = room;
     this.date = date;
     this.attendees = attendees;
-    this.ratePerAttendee = ratePerAttendee;
+    this.payment = payment;
     this.salaryRow = salaryRow;
   }
 
@@ -85,12 +85,12 @@ public class SalaryInfo {
     this.attendees = attendees;
   }
 
-  public double getRatePerAttendee() {
-    return ratePerAttendee;
+  public int getPayment() {
+    return payment;
   }
 
-  public void setRatePerAttendee(double ratePerAttendee) {
-    this.ratePerAttendee = ratePerAttendee;
+  public void setPayment(int payment) {
+    this.payment = payment;
   }
 
   @Override
@@ -102,7 +102,7 @@ public class SalaryInfo {
             .add("room", room)
             .add("date", date)
             .add("attendees", attendees)
-            .add("ratePerAttendee", ratePerAttendee)
+            .add("payment", payment)
             .add("salaryRow", salaryRow)
             .toString();
   }
@@ -114,7 +114,7 @@ public class SalaryInfo {
     SalaryInfo that = (SalaryInfo) o;
     return teacherId == that.teacherId &&
             attendees == that.attendees &&
-            Double.compare(that.ratePerAttendee, ratePerAttendee) == 0 &&
+            Integer.compare(that.payment, payment) == 0 &&
             Objects.equal(teacherName, that.teacherName) &&
             Objects.equal(className, that.className) &&
             Objects.equal(room, that.room) &&
@@ -124,6 +124,6 @@ public class SalaryInfo {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(teacherId, teacherName, className, room, date, attendees, ratePerAttendee, salaryRow);
+    return Objects.hashCode(teacherId, teacherName, className, room, date, attendees, payment, salaryRow);
   }
 }

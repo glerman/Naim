@@ -1,16 +1,15 @@
 package domain;
 
-import dnl.utils.text.table.TextTable;
-
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 
 public class TeacherOutput {
 
-  public final List<TextTable> tablePerClass;
+  public final Map<String, Collection<SalaryInfo>> classNameToSalariesInfo;
   public final int totalPayment;
 
-  public TeacherOutput(List<TextTable> tablePerClass, int totalPayment) {
-    this.tablePerClass = tablePerClass;
+  public TeacherOutput(Map<String, Collection<SalaryInfo>> classNameToSalariesInfo, int totalPayment) {
+    this.classNameToSalariesInfo = classNameToSalariesInfo;
     this.totalPayment = totalPayment;
   }
 }

@@ -8,6 +8,7 @@ import file.FileReader;
 import mail.Sender;
 import parse.CsvParser;
 import parse.CsvResult;
+import view.texttable.SalariesTextTableFormatter;
 
 import javax.mail.MessagingException;
 import java.io.ByteArrayOutputStream;
@@ -21,6 +22,8 @@ import java.util.Map;
  * Created by glerman on 24/9/17.
  */
 public class App {
+
+  private static final String[] OUTPUT_COLUMNS = {"כיתה", "אולם", "תאריך", "משתתפים", "תעריף"};
 
   private static String subjectSuffix = "פירוט תשלום עבור חודש - 09/2017";
 
@@ -37,6 +40,7 @@ public class App {
   private static String galSecret = "client_secret_gal.json";
 
   private static boolean sendFromNaim = false;
+  private static boolean sendMails = false;
 
   public static void main(String[] args) throws IOException, MessagingException {
 
@@ -59,20 +63,22 @@ public class App {
     Map<String, TeacherOutput> teacherOutputs = salariesLogic.createTeacherOutputs();
 
     List<String> problemTeachers = Lists.newArrayList();
+    SalariesTextTableFormatter tableFormatter = new SalariesTextTableFormatter();
 
     teacherOutputs.forEach((teacherName, teacherOutput) -> {
 
       StringBuilder sb = new StringBuilder();
       Teacher teacher = teacherRegistry.getTeacher(teacherName);
-      if (teacher == null) {
+      if (teacher == null && sendMails) {
         problemTeachers.add(teacherName);
         return;
       }
       sb.append("\n").append(message).append("\n").append("דו\"ח שיעורים\n");
 
-      for (TextTable outputTable : teacherOutput.tablePerClass) {
+      teacherOutput.classNameToSalariesInfo.forEach((className, salariesInfo) -> {
+        TextTable outputTable = tableFormatter.toTextTable(salariesInfo, OUTPUT_COLUMNS);
         handleSingleOutputTable(charset, sb, outputTable);
-      }
+      });
       sb.append("סה\"כ בגין שיעורים: ").append(teacherOutput.totalPayment).append(" ש״ח").append("\n");
       sb.append("\n").append("תודה").append("\n\n");
       sb.append("לנה").append("\n");
@@ -82,16 +88,18 @@ public class App {
               "facebook.com/stnaim\n" +
               "facebook.com/gymnaim");
 
-      String subjectLine = String.format("%s %s", teacher.getName(), subjectSuffix);
-      try {
-        sender.sendMail(
-                teacher.getEmail(),
-                sendFromNaim ? naimEmail : galEmail,
-                subjectLine,
-                sb.toString());
-        Thread.sleep(500);
-      } catch (Exception e) {
-        throw new RuntimeException(e);
+      if (sendMails) {
+        String subjectLine = String.format("%s %s", teacher.getName(), subjectSuffix);
+        try {
+          sender.sendMail(
+                  teacher.getEmail(),
+                  sendFromNaim ? naimEmail : galEmail,
+                  subjectLine,
+                  sb.toString());
+          Thread.sleep(500);
+        } catch (Exception e) {
+          throw new RuntimeException(e);
+        }
       }
       System.out.println(sb);//.append("\n").append(subjectLine).append("\n").append(teacher.getName()).append("\n").append(teacher.getEmail()));
     });
@@ -116,4 +124,17 @@ public class App {
       throw new RuntimeException(e);
     }
   }
+
+//  private static List<TextTable> createSingleTeacherOutput(List<SalaryInfo> allSalariesSingleTeacher) {
+//    List<TextTable> salaryOutputsSingleTeacher = Lists.newArrayList();
+//    ImmutableListMultimap<String, SalaryInfo> teacherSalariesByClassName = Multimaps.index(allSalariesSingleTeacher, SalaryInfo::getClassName);
+//
+//    for (String className : teacherSalariesByClassName.keySet()) {
+//      TextTable textTable = toTextTable(teacherSalariesByClassName.get(className));
+//      salaryOutputsSingleTeacher.add(textTable);
+//    }
+//    return salaryOutputsSingleTeacher;
+//  }
+//
+
 }

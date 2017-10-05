@@ -56,17 +56,17 @@ public class SalariesLogicTest {
 //    });
 //  }
 //
-  private void checkOutputDimensions(Map<Integer, TextTable> teacherOutputs) {
-
-    teacherOutputs.forEach((teacherId, table) -> {
-
-      TableModel tableModel = table.getTableModel();
-
-      int columnCount = tableModel.getColumnCount();
-      int rowCount = tableModel.getRowCount();
-
-      Assert.assertEquals(SalariesLogic.OUTPUT_COLUMNS.length, columnCount);
-      Assert.assertEquals(groupedSalaryInfo.get(teacherId).size(), rowCount);
-    });
-  }
+//  private void checkOutputDimensions(Map<Integer, TextTable> teacherOutputs) {
+//
+//    teacherOutputs.forEach((teacherId, table) -> {
+//
+//      TableModel tableModel = table.getTableModel();
+//
+//      int columnCount = tableModel.getColumnCount();
+//      int rowCount = tableModel.getRowCount();
+//
+//      Assert.assertEquals(SalariesLogic.OUTPUT_COLUMNS.length, columnCount);
+//      Assert.assertEquals(groupedSalaryInfo.get(teacherId).size(), rowCount);
+//    });
+//  }
 }
