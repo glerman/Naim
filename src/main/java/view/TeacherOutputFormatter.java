@@ -1,13 +1,11 @@
 package view;
 
-import dnl.utils.text.table.TextTable;
+import domain.SalaryInfo;
 import domain.TeacherOutput;
-import report.ReportAggregator;
 import view.texttable.SalariesTextTableFormatter;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 
 //todo: test format via system test
 public class TeacherOutputFormatter {
@@ -27,15 +25,14 @@ public class TeacherOutputFormatter {
     tableFormatter = new SalariesTextTableFormatter();
   }
 
-  public StringBuilder formatTeacherOutput(String charset, TeacherOutput teacherOutput) {
+  public StringBuilder formatTeacherOutput(String charset, TeacherOutput teacherOutput) throws UnsupportedEncodingException {
     StringBuilder sb = new StringBuilder();
 
     sb.append("\n").append(message).append("\n").append("דו\"ח שיעורים\n");
 
-    teacherOutput.classNameToSalariesInfo.forEach((className, salariesInfo) -> {
-      TextTable outputTable = tableFormatter.toTextTable(salariesInfo, OUTPUT_COLUMNS);
-      handleSingleOutputTable(charset, sb, outputTable);
-    });
+    for (Collection<SalaryInfo> salaries : teacherOutput.classNameToSalariesInfo.values()) {
+      tableFormatter.formatSingleTeacherSalaries(salaries, OUTPUT_COLUMNS, charset, sb);
+    }
     sb.append("סה\"כ בגין שיעורים: ").append(teacherOutput.totalPayment).append(" ש״ח").append("\n");
     sb.append("\n").append("תודה").append("\n\n");
     sb.append("לנה").append("\n");
@@ -49,16 +46,5 @@ public class TeacherOutputFormatter {
 
   public String formatSubjectLine(String teacherName) {
     return String.format("%s %s", teacherName, subjectSuffix);
-  }
-
-  private void handleSingleOutputTable(String charset, StringBuilder sb, TextTable outputTable) {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    outputTable.printTable(new PrintStream(outputStream), 0);
-    try {
-      String outputTableStr = outputStream.toString(charset);
-      sb.append(outputTableStr).append("\n");
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
   }
 }

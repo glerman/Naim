@@ -18,7 +18,7 @@ public class FileReader {
 
     File file = new File(path);
     if (!file.exists()) {
-      ReportAggregator.instance.inputFileError("File not found: " + path, null);
+      ReportAggregator.instance.ioError("File not found: " + path, null);
       return Optional.empty();
     }
 
@@ -26,7 +26,7 @@ public class FileReader {
       List<String> lines = Files.readLines(file, Charset.forName(charset));
       return Optional.of(lines);
     } catch (IOException e) {
-      ReportAggregator.instance.inputFileError("Failed reading file: " + path, e);
+      ReportAggregator.instance.ioError("Failed reading file: " + path, e);
       return Optional.empty();
     }
   }

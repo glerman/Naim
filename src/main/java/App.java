@@ -11,6 +11,7 @@ import view.TeacherOutputFormatter;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,7 +39,7 @@ public class App {
     }
   }
 
-  private static void runApp(String[] args) throws IOException {
+  private static void runApp(String[] args) {
     ReportAggregator.instance.appInput(args);
     String salariesFilePath = args[0];
     String teacherFilePath = args[1];
@@ -56,39 +57,88 @@ public class App {
       Map<String, TeacherOutput> teacherOutputs = salariesLogic.createTeacherOutputs();
       ReportAggregator.instance.teacherOutputs(teacherOutputs);
 
-      appLogic(charset, sendMails, sendFromNaim, teacherOutputs);
+      Optional<Sender> sender;
+      try {
+        sender = sendMails ?
+                Optional.of(new Sender(sendFromNaim)) :
+                Optional.empty();
+      } catch (IOException e) {
+        ReportAggregator.instance.ioError("Failed to create mail service instance", e);
+        return;
+      }
+      teacherOutputs.forEach((teacherName, teacherOutput) ->
+              appLogic(teacherName, teacherOutput, charset, sender));
     }
   }
 
+  private static void appLogic(String teacherName, TeacherOutput teacherOutput, String charset, Optional<Sender> sender) {
+    Teacher teacher = teacherRegistry.getTeacher(teacherName);
+    if (teacher == null) {
+      ReportAggregator.instance.addTeacherWithoutEmail(teacherName);
+      return;
+    }
+    StringBuilder formattedTeacherOutput;
+    try {
+      formattedTeacherOutput = formatter.formatTeacherOutput(charset, teacherOutput);
+    } catch (UnsupportedEncodingException e) {
+      ReportAggregator.instance.formattingError(teacherName, e);
+      return;
+    }
+    String subjectLine = formatter.formatSubjectLine(teacherName);
+    if (sender.isPresent()) {
+      String emailBodyText = formattedTeacherOutput.toString();
+      try {
+        ReportAggregator.instance.incSendMailAttempt();
+        sender.get().sendMail(
+                teacher.getEmail(),
+                subjectLine,
+                emailBodyText);
+        Thread.sleep(500);
+      } catch (Exception e) {
+        ReportAggregator.instance.sendMailFailure("Failed to send teacher mail", teacher, subjectLine, e);
+      }
+    }
+    //Add subject and email to the printed version
+    formattedTeacherOutput.append("\n").append(subjectLine).append("\n").append(teacher.getEmail());
+    System.out.println(formattedTeacherOutput);
+  }
+
+
 
   private static void appLogic(String charset, boolean sendMails, boolean sendFromNaim,
-                               Map<String, TeacherOutput> teacherOutputs) throws IOException {
+                               Map<String, TeacherOutput> teacherOutputs) {
 
-    Sender sender = new Sender(sendFromNaim);
-    teacherOutputs.forEach((teacherName, teacherOutput) -> {
-      Teacher teacher = teacherRegistry.getTeacher(teacherName);
-      if (teacher == null) {
-        ReportAggregator.instance.addTeacherWithoutEmail(teacherName);
-        return;
-      }
-      StringBuilder formattedTeacherOutput = formatter.formatTeacherOutput(charset, teacherOutput);
-      String subjectLine = formatter.formatSubjectLine(teacherName);
-      if (sendMails) {
-        String emailBodyText = formattedTeacherOutput.toString();
-        try {
-          ReportAggregator.instance.incSendMailAttempt();
-          sender.sendMail(
-                  teacher.getEmail(),
-                  subjectLine,
-                  emailBodyText);
-          Thread.sleep(500);
-        } catch (Exception e) {
-          ReportAggregator.instance.sendMailFailure(teacher, subjectLine, emailBodyText, e);
-        }
-      }
+//    Sender sender = new Sender(sendFromNaim);
+//    teacherOutputs.forEach((teacherName, teacherOutput) -> {
+//      Teacher teacher = teacherRegistry.getTeacher(teacherName);
+//      if (teacher == null) {
+//        ReportAggregator.instance.addTeacherWithoutEmail(teacherName);
+//        return;
+//      }
+//      StringBuilder formattedTeacherOutput = null;
+//      try {
+//        formattedTeacherOutput = formatter.formatTeacherOutput(charset, teacherOutput);
+//      } catch (UnsupportedEncodingException e) {
+//        ReportAggregator.instance.teacherOutputFormattingError(teacherName, e, charset);
+//        return;
+//      }
+//      String subjectLine = formatter.formatSubjectLine(teacherName);
+//      if (sendMails) {
+//        String emailBodyText = formattedTeacherOutput.toString();
+//        try {
+//          ReportAggregator.instance.incSendMailAttempt();
+//          sender.sendMail(
+//                  teacher.getEmail(),
+//                  subjectLine,
+//                  emailBodyText);
+//          Thread.sleep(500);
+//        } catch (Exception e) {
+//          ReportAggregator.instance.sendMailFailure(teacher, subjectLine, emailBodyText, e);
+//        }
+//      }
       //Add subject and email to the printed version
-      formattedTeacherOutput.append("\n").append(subjectLine).append("\n").append(teacher.getEmail());
-      System.out.println(formattedTeacherOutput);
-    });
+//      formattedTeacherOutput.append("\n").append(subjectLine).append("\n").append(teacher.getEmail());
+//      System.out.println(formattedTeacherOutput);
+//    });
   }
 }

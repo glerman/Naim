@@ -4,13 +4,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import domain.Teacher;
 import domain.TeacherOutput;
-import report.pojo.InputFileError;
-import report.pojo.SalaryParsingProblem;
-import report.pojo.SendMailProblem;
-import report.pojo.TeacherParsingProblem;
+import report.pojo.GeneralProblem;
+import report.pojo.DomainObjectParsingProblem;
 
-import java.awt.peer.ChoicePeer;
-import java.io.IOException;
 import java.util.*;
 
 public class ReportAggregator {
@@ -18,13 +14,14 @@ public class ReportAggregator {
   public static final ReportAggregator instance = new ReportAggregator();
 
   final Set<String> teachersWithoutEmail;
-  final Set<SalaryParsingProblem> salaryParsingErrors;
-  final Set<TeacherParsingProblem> teacherParsingErrors;
+  final Set<DomainObjectParsingProblem> salaryParsingErrors;
+  final Set<DomainObjectParsingProblem> teacherParsingErrors;
   int numMailsToSend;
   int sentMailAttempt;
   private List<String> appInput;
-  private Set<SendMailProblem> sendMailProblems;
-  private Set<InputFileError> inputFileErrors;
+  private Set<GeneralProblem> sendMailProblems;
+  private Set<GeneralProblem> generalProblems;
+  private Set<GeneralProblem> formattingErrors;
   private Set<Throwable> unexpectedErrors;
 
   private ReportAggregator() {
@@ -32,8 +29,9 @@ public class ReportAggregator {
     salaryParsingErrors = Sets.newHashSet();
     teacherParsingErrors = Sets.newHashSet();
     sendMailProblems = Sets.newHashSet();
-    inputFileErrors = Sets.newHashSet();
+    generalProblems = Sets.newHashSet();
     unexpectedErrors = Sets.newHashSet();
+    formattingErrors = Sets.newHashSet();
   }
 
   public void addTeacherWithoutEmail(final String teacherName) {
@@ -45,13 +43,14 @@ public class ReportAggregator {
 
     reportCollectionLineByLine(appInput, "App input: ", report);
     reportProblemsCollection(unexpectedErrors, "Unexpected errors: ", "Unexpected errors were: ", report);
-    reportProblemsCollection(inputFileErrors, "Input file errors: ", "Input file errors are: ", report);
+    reportProblemsCollection(generalProblems, "Input/Output errors: ", "Input/Output errors are: ", report);
     reportProblemsCollection(salaryParsingErrors, "Salary parsing errors: ", "The salary parsing errors were: ", report);
     reportProblemsCollection(teacherParsingErrors, "Teacher parsing errors: ", "The teacher parsing errors were: ", report);
     reportNumber(numMailsToSend, "Total mails to send: ", report);
     reportProblemsCollection(teachersWithoutEmail, "Number of teachers without emails (send wasn't attempted): ", "The teachers without emails are: ", report);
     reportNumber(sentMailAttempt, "Send mail attempts: ", report);
     reportProblemsCollection(sendMailProblems, "Send mail failures: ", "Problems with sending mails were: ", report);
+    reportProblemsCollection(formattingErrors, "Formatting errors: ", "Formatting erros were: ", report);
     return report.toString();
   }
 
@@ -82,26 +81,33 @@ public class ReportAggregator {
   }
 
   public void salaryParsingError(Object[] salaryRow, Exception e) {
-    salaryParsingErrors.add(SalaryParsingProblem.create(salaryRow, e));
+    salaryParsingErrors.add(DomainObjectParsingProblem.create(salaryRow, e));
   }
 
   public void teacherParsingError(Object[] teacherRow, Exception e) {
-    teacherParsingErrors.add(TeacherParsingProblem.create(teacherRow, e));
+    teacherParsingErrors.add(DomainObjectParsingProblem.create(teacherRow, e));
   }
 
   public void appInput(String[] args) {
     appInput = Lists.newArrayList(args);
   }
 
-  public void sendMailFailure(Teacher teacher, String subjectLine, String emailBodyText, Exception e) {
-    sendMailProblems.add(SendMailProblem.create(teacher, e, subjectLine, emailBodyText));
+  public void sendMailFailure(String message, Teacher teacher, String subjectLine, Exception e) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(message).append(" ").append(teacher).append(" ").append(subjectLine).append(" ").append(e);
+    String extendedErrorMessage = sb.toString();
+    sendMailProblems.add(GeneralProblem.create(extendedErrorMessage, e));
   }
 
-  public void inputFileError(String message, Exception e) {
-    inputFileErrors.add(InputFileError.create(message, e));
+  public void ioError(String message, Exception e) {
+    generalProblems.add(GeneralProblem.create(message, e));
   }
 
   public void unexpectedError(Throwable t) {
     unexpectedErrors.add(t);
+  }
+
+  public void formattingError(String teacherName, Exception e) {
+    formattingErrors.add(GeneralProblem.create(teacherName, e));
   }
 }
