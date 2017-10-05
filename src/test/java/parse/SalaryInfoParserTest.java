@@ -8,6 +8,7 @@ import org.junit.Test;
 import util.InputReaderHelper;
 
 import java.util.List;
+import java.util.Optional;
 
 public class SalaryInfoParserTest {
 
@@ -24,20 +25,22 @@ public class SalaryInfoParserTest {
   @Test
   public void testDateFormat() throws Exception {
 
-    SalaryInfo salaryInfo = parser.parse(csvResult.data[0]);
+    SalaryInfo salaryInfo = parser.parse(csvResult.data[0]).get();
     Assert.assertEquals("02/08", salaryInfo.getDate());
   }
 
   @Test
   public void testAttendees() throws Exception {
-    SalaryInfo salaryInfo = parser.parse(csvResult.data[1]);
+    SalaryInfo salaryInfo = parser.parse(csvResult.data[1]).get();
     Assert.assertEquals(4, salaryInfo.getAttendees());
   }
 
   @Test
   public void print() throws Exception {
     Lists.newArrayList(csvResult.data).stream().
-            map(parser::parse).map(SalaryInfo::getTeacherName).
+            map(parser::parse).
+            map(Optional::get).
+            map(SalaryInfo::getTeacherName).
             distinct().
             forEach(System.out::println);
 

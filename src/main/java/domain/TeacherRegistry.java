@@ -16,8 +16,7 @@ public class TeacherRegistry {
   }
 
   private void register(final Object[] teacherRow) {
-    Teacher teacher = parser.parse(teacherRow);
-    registry.put(teacher.getName(), teacher);
+    parser.parse(teacherRow).ifPresent(teacher -> registry.put(teacher.getName(), teacher));
   }
 
   public void registerAll(final Object[][] teacherRows) {

@@ -15,7 +15,12 @@ public class SalariesLogic {
   public SalariesLogic(final Object[][] salariesData) {
 
     SalaryInfoParser parser = new SalaryInfoParser();
-    List<SalaryInfo> salariesInfo = Lists.newArrayList(salariesData).stream().map(parser::parse).collect(Collectors.toList());
+    List<SalaryInfo> salariesInfo = Lists.newArrayList(salariesData).
+            stream().
+            map(parser::parse).
+            filter(Optional::isPresent).
+            map(Optional::get).
+            collect(Collectors.toList());
     salariesRegistry = Multimaps.index(salariesInfo, SalaryInfo::getTeacherName);
   }
 

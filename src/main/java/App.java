@@ -1,4 +1,4 @@
-import logic.ReportAggregator;
+import report.ReportAggregator;
 import logic.SalariesLogic;
 import domain.Teacher;
 import domain.TeacherOutput;
@@ -25,6 +25,7 @@ public class App {
 
   public static void main(String[] args) throws IOException, MessagingException {
 
+    ReportAggregator.instance.appInput(args);
     String salariesFilePath = args[0];
     String teacherFilePath = args[1];
     String charset = args[2];
@@ -40,6 +41,8 @@ public class App {
 
     appLogic(charset, sendMails, sendFromNaim, teacherOutputs);
 
+    System.out.println();
+    System.out.println();
     System.out.println(ReportAggregator.instance.report());
   }
 
@@ -57,15 +60,16 @@ public class App {
       StringBuilder formattedTeacherOutput = formatter.formatTeacherOutput(charset, teacherOutput);
       String subjectLine = formatter.formatSubjectLine(teacherName);
       if (sendMails) {
+        String emailBodyText = formattedTeacherOutput.toString();
         try {
           ReportAggregator.instance.incSendMailAttempt();
           sender.sendMail(
                   teacher.getEmail(),
                   subjectLine,
-                  formattedTeacherOutput.toString());
+                  emailBodyText);
           Thread.sleep(500);
         } catch (Exception e) {
-          throw new RuntimeException(e);
+          ReportAggregator.instance.sendMailFailure(teacher, subjectLine, emailBodyText, e);
         }
       }
       //Add subject and email to the printed version

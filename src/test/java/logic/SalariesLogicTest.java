@@ -14,6 +14,7 @@ import util.InputReaderHelper;
 import javax.swing.table.TableModel;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SalariesLogicTest {
@@ -29,6 +30,7 @@ public class SalariesLogicTest {
     groupedSalaryInfo = Lists.newArrayList(salariesData.data).
             stream().
             map(salaryInfoParser::parse).
+            map(Optional::get).
             collect(Collectors.groupingBy(
                     SalaryInfo::getTeacherId,
                     Collectors.toList()));
