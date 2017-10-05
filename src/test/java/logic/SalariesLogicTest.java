@@ -4,15 +4,12 @@ import com.google.common.collect.Lists;
 import dnl.utils.text.table.TextTable;
 import domain.SalaryInfo;
 import domain.TeacherOutput;
-import file.FileReader;
-import logic.SalariesLogic;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import parse.CsvParser;
 import parse.CsvResult;
-import util.FilePathProvider;
 import parse.SalaryInfoParser;
+import util.InputReaderHelper;
 
 import javax.swing.table.TableModel;
 import java.util.List;
@@ -27,9 +24,7 @@ public class SalariesLogicTest {
   @Before
   public void setUp() throws Exception {
 
-    FileReader fileReader = new FileReader();
-    CsvParser csvParser = new CsvParser();
-    CsvResult salariesData = csvParser.parse(fileReader.read(FilePathProvider.salariesFilePath, "UTF-8"));
+    CsvResult salariesData = InputReaderHelper.readCsv(InputReaderHelper.salariesFilePath);
     SalaryInfoParser salaryInfoParser = new SalaryInfoParser();
     groupedSalaryInfo = Lists.newArrayList(salariesData.data).
             stream().

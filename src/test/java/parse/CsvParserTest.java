@@ -2,11 +2,9 @@ package parse;
 
 import com.google.common.collect.Lists;
 import dnl.utils.text.table.TextTable;
-import file.FileReader;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import util.FilePathProvider;
 import util.InputReaderHelper;
 
 import java.util.List;
@@ -26,7 +24,7 @@ public class CsvParserTest {
   @Test
   public void testSalaries() throws Exception {
 
-    List<String> salaryLines = InputReaderHelper.readLines(FilePathProvider.salariesFilePath);
+    List<String> salaryLines = InputReaderHelper.readLines(InputReaderHelper.salariesFilePath);
     CsvResult result = csvParser.parse(salaryLines);
 
     Assert.assertEquals(12, result.header.length);
@@ -38,7 +36,7 @@ public class CsvParserTest {
   @Test
   public void testTeachers() throws Exception {
 
-    List<String> teacherLines = InputReaderHelper.readLines(FilePathProvider.teachersFilePath);
+    List<String> teacherLines = InputReaderHelper.readLines(InputReaderHelper.teachersFilePath);
     CsvResult result = csvParser.parse(teacherLines);
 
     Assert.assertEquals(2, result.header.length);

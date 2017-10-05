@@ -4,7 +4,6 @@ import domain.SalaryInfo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import util.FilePathProvider;
 import util.InputReaderHelper;
 
 public class SalaryInfoParserTest {
@@ -16,7 +15,7 @@ public class SalaryInfoParserTest {
   @Before
   public void setUp() throws Exception {
     parser = new SalaryInfoParser();
-    csvResult = InputReaderHelper.readCsv(FilePathProvider.salariesFilePath);
+    csvResult = InputReaderHelper.readCsv(InputReaderHelper.salariesFilePath);
   }
 
   @Test
