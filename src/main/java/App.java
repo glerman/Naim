@@ -39,14 +39,13 @@ public class App {
   private static String naimSecret = "client_secret_naim.json";
   private static String galSecret = "client_secret_gal.json";
 
-  private static boolean sendFromNaim = false;
-  private static boolean sendMails = false;
-
   public static void main(String[] args) throws IOException, MessagingException {
 
     String salariesFilePath = args[0];
     String teacherFilePath = args[1];
     String charset = args[2];
+    boolean sendMails = Boolean.valueOf(args[3]);
+    boolean sendFromNaim = Boolean.valueOf(args[4]);
 
     Sender sender = new Sender(sendFromNaim ? naimSecret : galSecret);
 
