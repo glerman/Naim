@@ -1,4 +1,4 @@
-import logic.ProblemTracker;
+import logic.ReportAggregator;
 import logic.SalariesLogic;
 import domain.Teacher;
 import domain.TeacherOutput;
@@ -22,7 +22,6 @@ public class App {
   private static final CsvParser csvParser = new CsvParser();
   private static final TeacherRegistry teacherRegistry = new TeacherRegistry();
   private static final TeacherOutputFormatter formatter = new TeacherOutputFormatter();
-  private static final ProblemTracker problemTracker = new ProblemTracker();
 
   public static void main(String[] args) throws IOException, MessagingException {
 
@@ -34,23 +33,16 @@ public class App {
 
     CsvResult parsedSalaries = csvParser.parse(fileReader.read(salariesFilePath, charset));
     CsvResult parsedTeachers = csvParser.parse(fileReader.read(teacherFilePath, charset));
-
     teacherRegistry.registerAll(parsedTeachers.data);
     SalariesLogic salariesLogic = new SalariesLogic(parsedSalaries.data);
-
     Map<String, TeacherOutput> teacherOutputs = salariesLogic.createTeacherOutputs();
+    ReportAggregator.instance.teacherOutputs(teacherOutputs);
 
     appLogic(charset, sendMails, sendFromNaim, teacherOutputs);
-    printAppReport(teacherOutputs);
+
+    System.out.println(ReportAggregator.instance.report());
   }
 
-  private static void printAppReport(Map<String, TeacherOutput> teacherOutputs) {
-    StringBuilder report = new StringBuilder();
-    report.append("\n\n").append("Total teacher salaries: ").append(teacherOutputs.size());
-    problemTracker.appendReport(report);
-
-    System.out.println(report);
-  }
 
   private static void appLogic(String charset, boolean sendMails, boolean sendFromNaim,
                                Map<String, TeacherOutput> teacherOutputs) throws IOException {
@@ -59,13 +51,14 @@ public class App {
     teacherOutputs.forEach((teacherName, teacherOutput) -> {
       Teacher teacher = teacherRegistry.getTeacher(teacherName);
       if (teacher == null) {
-        problemTracker.addTeacherWithoutEmail(teacherName);
+        ReportAggregator.instance.addTeacherWithoutEmail(teacherName);
         return;
       }
       StringBuilder formattedTeacherOutput = formatter.formatTeacherOutput(charset, teacherOutput);
       String subjectLine = formatter.formatSubjectLine(teacherName);
       if (sendMails) {
         try {
+          ReportAggregator.instance.incSendMailAttempt();
           sender.sendMail(
                   teacher.getEmail(),
                   subjectLine,
