@@ -14,19 +14,27 @@ import java.util.Properties;
 
 public class Sender {
 
-  private Gmail gmail;
+  //todo: move to properties file
+  private static final String naimSecret = "client_secret_naim.json";
+  private static final String galSecret = "client_secret_gal.json";
+  private static String galEmail = "gal.lerman1@gmail.com";
+  private static String naimEmail = "<info@naim.org.il> סטודיו נעים";
 
-  public Sender(final String clientSecretFileName) throws IOException {
+  private final Gmail gmail;
+  private final String fromEmail;
+
+  public Sender(final boolean sendFromNaim) throws IOException {
+    fromEmail = sendFromNaim ? naimEmail : galEmail;
+    String clientSecretFileName = sendFromNaim ? naimSecret : galSecret;
     gmail = GmailServiceProvider.getGmailService(clientSecretFileName);
   }
 
 
   public Message sendMail(String to,
-                                 String from,
-                                 String subject,
-                                 String bodyText) throws MessagingException, IOException {
+                          String subject,
+                          String bodyText) throws MessagingException, IOException {
 
-    MimeMessage email = createEmail(to, from, subject, bodyText);
+    MimeMessage email = createEmail(to, fromEmail, subject, bodyText);
     return sendMessage(gmail, "me", email);
   }
 

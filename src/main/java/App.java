@@ -34,11 +34,6 @@ public class App {
           "(בתוספת מע\"מ במידה וצריך).\n" +
           "\n";
 
-  private static String galEmail = "gal.lerman1@gmail.com";
-  private static String naimEmail = "<info@naim.org.il> סטודיו נעים";
-  private static String naimSecret = "client_secret_naim.json";
-  private static String galSecret = "client_secret_gal.json";
-
   public static void main(String[] args) throws IOException, MessagingException {
 
     String salariesFilePath = args[0];
@@ -47,7 +42,7 @@ public class App {
     boolean sendMails = Boolean.valueOf(args[3]);
     boolean sendFromNaim = Boolean.valueOf(args[4]);
 
-    Sender sender = new Sender(sendFromNaim ? naimSecret : galSecret);
+    Sender sender = new Sender(sendFromNaim);
 
     FileReader fileReader = new FileReader();
     CsvParser csvParser = new CsvParser();
@@ -68,7 +63,7 @@ public class App {
 
       StringBuilder sb = new StringBuilder();
       Teacher teacher = teacherRegistry.getTeacher(teacherName);
-      if (teacher == null && sendMails) {
+      if (teacher == null) {
         problemTeachers.add(teacherName);
         return;
       }
@@ -85,14 +80,13 @@ public class App {
       sb.append("דרך שלמה (סלמה) 46, תל אביב, מיקוד: 66073").append("\n\n");
       sb.append("naim.org.il\n" +
               "facebook.com/stnaim\n" +
-              "facebook.com/gymnaim");
+              "facebook.com/gymnaim\n");
 
+      String subjectLine = String.format("%s %s", teacher.getName(), subjectSuffix);;
       if (sendMails) {
-        String subjectLine = String.format("%s %s", teacher.getName(), subjectSuffix);
         try {
           sender.sendMail(
                   teacher.getEmail(),
-                  sendFromNaim ? naimEmail : galEmail,
                   subjectLine,
                   sb.toString());
           Thread.sleep(500);
@@ -100,7 +94,8 @@ public class App {
           throw new RuntimeException(e);
         }
       }
-      System.out.println(sb);//.append("\n").append(subjectLine).append("\n").append(teacher.getName()).append("\n").append(teacher.getEmail()));
+      sb.append("\n").append(subjectLine).append("\n").append(teacher.getEmail());
+      System.out.println(sb);
     });
 
     System.out.printf("\n\n");
