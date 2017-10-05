@@ -9,7 +9,7 @@ import java.util.List;
 public class InputReaderHelper {
 
   public final static String salariesFilePath = InputReaderHelper.class.getResource("/salaries.csv").getFile();
-  public final static String teachersFilePath = InputReaderHelper.class.getResource("/teachers.csv").getFile();
+  public final static String teachersFilePath = InputReaderHelper.class.getResource("/teachers_2.csv").getFile();
 
   public static CsvResult readCsv(final String filepath) {
     FileReader fileReader = new FileReader();

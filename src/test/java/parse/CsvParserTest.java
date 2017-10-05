@@ -9,7 +9,7 @@ import util.InputReaderHelper;
 
 import java.util.List;
 
-
+//todo: add content test
 public class CsvParserTest {
 
   private static final List<Integer> ALLOWED_EMPTY_COLUMNS = Lists.newArrayList(2);
@@ -40,7 +40,7 @@ public class CsvParserTest {
     CsvResult result = csvParser.parse(teacherLines);
 
     Assert.assertEquals(2, result.header.length);
-    Assert.assertEquals(2, result.data.length);
+    Assert.assertEquals(24, result.data.length);
 
     doTest(result);
   }
