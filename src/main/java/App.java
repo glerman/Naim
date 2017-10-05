@@ -1,7 +1,6 @@
-import com.google.api.client.repackaged.com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import dnl.utils.text.table.TextTable;
-import domain.SalariesLogic;
+import logic.SalariesLogic;
 import domain.Teacher;
 import domain.TeacherOutput;
 import domain.TeacherRegistry;

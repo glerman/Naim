@@ -1,8 +1,11 @@
-package domain;
+package logic;
 
 import com.google.common.collect.Lists;
 import dnl.utils.text.table.TextTable;
+import domain.SalaryInfo;
+import domain.TeacherOutput;
 import file.FileReader;
+import logic.SalariesLogic;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

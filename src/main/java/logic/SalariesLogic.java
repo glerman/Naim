@@ -1,7 +1,9 @@
-package domain;
+package logic;
 
 import com.google.common.collect.*;
 import dnl.utils.text.table.TextTable;
+import domain.SalaryInfo;
+import domain.TeacherOutput;
 import parse.SalaryInfoParser;
 
 import java.util.HashMap;
