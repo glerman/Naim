@@ -1,4 +1,4 @@
-import com.google.common.collect.Lists;
+import logic.ProblemTracker;
 import logic.SalariesLogic;
 import domain.Teacher;
 import domain.TeacherOutput;
@@ -11,13 +11,18 @@ import view.TeacherOutputFormatter;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by glerman on 24/9/17.
  */
 public class App {
+
+  private static final FileReader fileReader = new FileReader();
+  private static final CsvParser csvParser = new CsvParser();
+  private static final TeacherRegistry teacherRegistry = new TeacherRegistry();
+  private static final TeacherOutputFormatter formatter = new TeacherOutputFormatter();
+  private static final ProblemTracker problemTracker = new ProblemTracker();
 
   public static void main(String[] args) throws IOException, MessagingException {
 
@@ -27,66 +32,52 @@ public class App {
     boolean sendMails = Boolean.valueOf(args[3]);
     boolean sendFromNaim = Boolean.valueOf(args[4]);
 
-    Sender sender = new Sender(sendFromNaim);
-
-    FileReader fileReader = new FileReader();
-    CsvParser csvParser = new CsvParser();
-
     CsvResult parsedSalaries = csvParser.parse(fileReader.read(salariesFilePath, charset));
     CsvResult parsedTeachers = csvParser.parse(fileReader.read(teacherFilePath, charset));
 
-    TeacherRegistry teacherRegistry = new TeacherRegistry();
     teacherRegistry.registerAll(parsedTeachers.data);
-
     SalariesLogic salariesLogic = new SalariesLogic(parsedSalaries.data);
+
     Map<String, TeacherOutput> teacherOutputs = salariesLogic.createTeacherOutputs();
 
-    List<String> problemTeachers = Lists.newArrayList();
-    TeacherOutputFormatter formatter = new TeacherOutputFormatter();
+    appLogic(charset, sendMails, sendFromNaim, teacherOutputs);
+    printAppReport(teacherOutputs);
+  }
 
+  private static void printAppReport(Map<String, TeacherOutput> teacherOutputs) {
+    StringBuilder report = new StringBuilder();
+    report.append("\n\n").append("Total teacher salaries: ").append(teacherOutputs.size());
+    problemTracker.appendReport(report);
+
+    System.out.println(report);
+  }
+
+  private static void appLogic(String charset, boolean sendMails, boolean sendFromNaim,
+                               Map<String, TeacherOutput> teacherOutputs) throws IOException {
+
+    Sender sender = new Sender(sendFromNaim);
     teacherOutputs.forEach((teacherName, teacherOutput) -> {
-
       Teacher teacher = teacherRegistry.getTeacher(teacherName);
       if (teacher == null) {
-        problemTeachers.add(teacherName);
+        problemTracker.addTeacherWithoutEmail(teacherName);
         return;
       }
-      StringBuilder sb = formatter.formatTeacherOutput(charset, teacherOutput);
-
+      StringBuilder formattedTeacherOutput = formatter.formatTeacherOutput(charset, teacherOutput);
       String subjectLine = formatter.formatSubjectLine(teacherName);
       if (sendMails) {
         try {
           sender.sendMail(
                   teacher.getEmail(),
                   subjectLine,
-                  sb.toString());
+                  formattedTeacherOutput.toString());
           Thread.sleep(500);
         } catch (Exception e) {
           throw new RuntimeException(e);
         }
       }
-      sb.append("\n").append(subjectLine).append("\n").append(teacher.getEmail());
-      System.out.println(sb);
+      //Add subject and email to the printed version
+      formattedTeacherOutput.append("\n").append(subjectLine).append("\n").append(teacher.getEmail());
+      System.out.println(formattedTeacherOutput);
     });
-
-    System.out.printf("\n\n");
-    System.out.println("Total teacher salaries: " + teacherOutputs.size());
-    System.out.println("Out of which, didn't find emails for: " + problemTeachers.size());
-    System.out.println(problemTeachers);
-
   }
-
-
-//  private static List<TextTable> createSingleTeacherOutput(List<SalaryInfo> allSalariesSingleTeacher) {
-//    List<TextTable> salaryOutputsSingleTeacher = Lists.newArrayList();
-//    ImmutableListMultimap<String, SalaryInfo> teacherSalariesByClassName = Multimaps.index(allSalariesSingleTeacher, SalaryInfo::getClassName);
-//
-//    for (String className : teacherSalariesByClassName.keySet()) {
-//      TextTable textTable = toTextTable(teacherSalariesByClassName.get(className));
-//      salaryOutputsSingleTeacher.add(textTable);
-//    }
-//    return salaryOutputsSingleTeacher;
-//  }
-//
-
 }
