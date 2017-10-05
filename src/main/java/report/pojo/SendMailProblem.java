@@ -1,4 +1,4 @@
-package report;
+package report.pojo;
 
 import com.google.auto.value.AutoValue;
 import domain.Teacher;

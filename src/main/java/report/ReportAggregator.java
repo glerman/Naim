@@ -4,6 +4,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import domain.Teacher;
 import domain.TeacherOutput;
+import report.pojo.SalaryParsingProblem;
+import report.pojo.SendMailProblem;
+import report.pojo.TeacherParsingProblem;
 
 import java.util.*;
 
