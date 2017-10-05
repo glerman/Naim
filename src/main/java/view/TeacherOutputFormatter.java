@@ -2,6 +2,7 @@ package view;
 
 import dnl.utils.text.table.TextTable;
 import domain.TeacherOutput;
+import report.ReportAggregator;
 import view.texttable.SalariesTextTableFormatter;
 
 import java.io.ByteArrayOutputStream;

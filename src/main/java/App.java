@@ -11,7 +11,9 @@ import view.TeacherOutputFormatter;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by glerman on 24/9/17.
@@ -25,6 +27,18 @@ public class App {
 
   public static void main(String[] args) throws IOException, MessagingException {
 
+    try {
+      runApp(args);
+    } catch (Throwable t) {
+      ReportAggregator.instance.unexpectedError(t);
+    } finally {
+      System.out.println();
+      System.out.println();
+      System.out.println(ReportAggregator.instance.report());
+    }
+  }
+
+  private static void runApp(String[] args) throws IOException {
     ReportAggregator.instance.appInput(args);
     String salariesFilePath = args[0];
     String teacherFilePath = args[1];
@@ -32,18 +46,18 @@ public class App {
     boolean sendMails = Boolean.valueOf(args[3]);
     boolean sendFromNaim = Boolean.valueOf(args[4]);
 
-    CsvResult parsedSalaries = csvParser.parse(fileReader.read(salariesFilePath, charset));
-    CsvResult parsedTeachers = csvParser.parse(fileReader.read(teacherFilePath, charset));
-    teacherRegistry.registerAll(parsedTeachers.data);
-    SalariesLogic salariesLogic = new SalariesLogic(parsedSalaries.data);
-    Map<String, TeacherOutput> teacherOutputs = salariesLogic.createTeacherOutputs();
-    ReportAggregator.instance.teacherOutputs(teacherOutputs);
+    Optional<List<String>> salaryLines = fileReader.read(salariesFilePath, charset);
+    Optional<List<String>> teacherLines = fileReader.read(teacherFilePath, charset);
+    if (salaryLines.isPresent() && teacherLines.isPresent()) {
+      CsvResult parsedSalaries = csvParser.parse(salaryLines.get());
+      CsvResult parsedTeachers = csvParser.parse(teacherLines.get());
+      teacherRegistry.registerAll(parsedTeachers.data);
+      SalariesLogic salariesLogic = new SalariesLogic(parsedSalaries.data);
+      Map<String, TeacherOutput> teacherOutputs = salariesLogic.createTeacherOutputs();
+      ReportAggregator.instance.teacherOutputs(teacherOutputs);
 
-    appLogic(charset, sendMails, sendFromNaim, teacherOutputs);
-
-    System.out.println();
-    System.out.println();
-    System.out.println(ReportAggregator.instance.report());
+      appLogic(charset, sendMails, sendFromNaim, teacherOutputs);
+    }
   }
 
 

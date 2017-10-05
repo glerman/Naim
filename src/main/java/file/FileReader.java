@@ -1,28 +1,33 @@
 package file;
 
 import com.google.common.io.Files;
+import report.ReportAggregator;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Optional;
 
 public class FileReader {
 
   /**
    * @return the file as a list of lines
    */
-  public List<String> read(final String path, final String charset) {
+  public Optional<List<String>> read(final String path, final String charset) {
 
     File file = new File(path);
     if (!file.exists()) {
-      throw new RuntimeException("File not found: " + path);
+      ReportAggregator.instance.inputFileError("File not found: " + path, null);
+      return Optional.empty();
     }
 
     try {
-      return Files.readLines(file, Charset.forName(charset));
+      List<String> lines = Files.readLines(file, Charset.forName(charset));
+      return Optional.of(lines);
     } catch (IOException e) {
-      throw new RuntimeException("Failed reading file: " + path, e);
+      ReportAggregator.instance.inputFileError("Failed reading file: " + path, e);
+      return Optional.empty();
     }
   }
 }
