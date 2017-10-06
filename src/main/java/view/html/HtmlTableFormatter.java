@@ -2,15 +2,41 @@ package view.html;
 
 import com.google.common.collect.Lists;
 import domain.SalaryInfo;
+import j2html.TagCreator;
 
 import java.util.Collection;
+import java.util.List;
+
+import static j2html.TagCreator.*;
 
 public class HtmlTableFormatter {
 
   private static final String tableCaption = "דו״ח שיעורים";
 
   String toHtml(Collection<SalaryInfo> teacherSalaries, String[] columnNames) {
+    List<String> columnNamesList = Lists.newArrayList(columnNames);
 
+    return
+            html(
+              head(
+                      style("table, th, td {\n" +
+                              "            border: 1px solid black;\n" +
+                              "            text-align: right;\n" +
+                              "        }\n" +
+                              "        caption {\n" +
+                              "            display: table-caption;\n" +
+                              "            text-align: right;\n" +
+                              "        }")
+              ),
+              body(
+                      table(text("style=\"width:100%\""),
+                            caption(tableCaption),
+                            tr(each(columnNamesList, TagCreator::text))
+                      )
+
+              )
+            ).renderFormatted();
+    /*
     StringBuilder htmlBuilder = new StringBuilder();
     htmlBuilder.append("<!DOCTYPE html>").
             append("<html>").
@@ -39,6 +65,7 @@ public class HtmlTableFormatter {
 
 
     return htmlBuilder.toString();
+    */
   }
 
   /*
