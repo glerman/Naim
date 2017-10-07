@@ -46,5 +46,6 @@ public class SalariesTextTableFormatterTest {
       Assert.assertEquals(salaryInfo.getAttendees(), attendees);
       Assert.assertEquals(salaryInfo.getPayment(), rate);
     }
+    textTable.printTable();
   }
 }

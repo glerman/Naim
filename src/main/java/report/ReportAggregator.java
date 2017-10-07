@@ -7,6 +7,8 @@ import domain.TeacherOutput;
 import report.pojo.GeneralProblem;
 import report.pojo.DomainObjectParsingProblem;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.*;
 
 public class ReportAggregator {
@@ -67,7 +69,15 @@ public class ReportAggregator {
     if (c != null && !c.isEmpty()) {
       report.append(collectionPrefix).append("\n");
       for (Object o : c) {
-        report.append("* ").append(o).append("\n");
+        final String objectString;
+        if (o instanceof Throwable) {
+          ByteArrayOutputStream out = new ByteArrayOutputStream();
+          ((Throwable) o).printStackTrace(new PrintStream(out));
+          objectString = out.toString();
+        } else {
+          objectString = o.toString();
+        }
+        report.append("* ").append(objectString).append("\n");
       }
     }
     report.append("\n");

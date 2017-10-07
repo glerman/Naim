@@ -79,7 +79,7 @@ public class App {
     }
     StringBuilder formattedTeacherOutput;
     try {
-      formattedTeacherOutput = formatter.formatTeacherOutput(charset, teacherOutput);
+      formattedTeacherOutput = formatter.formatTeacherOutput(teacherOutput);
     } catch (UnsupportedEncodingException e) {
       ReportAggregator.instance.formattingError(teacherName, e);
       return;

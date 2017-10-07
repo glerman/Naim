@@ -2,7 +2,7 @@ package view;
 
 import domain.SalaryInfo;
 import domain.TeacherOutput;
-import view.texttable.SalariesTextTableFormatter;
+import view.html.HtmlTableFormatter;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
@@ -19,19 +19,20 @@ public class TeacherOutputFormatter {
           "(בתוספת מע\"מ במידה וצריך).\n" +
           "\n";
 
-  private final SalariesTextTableFormatter tableFormatter;
+  private final HtmlTableFormatter tableFormatter;
 
   public TeacherOutputFormatter() {
-    tableFormatter = new SalariesTextTableFormatter();
+    tableFormatter = new HtmlTableFormatter();
   }
 
-  public StringBuilder formatTeacherOutput(String charset, TeacherOutput teacherOutput) throws UnsupportedEncodingException {
+  public StringBuilder formatTeacherOutput(TeacherOutput teacherOutput) throws UnsupportedEncodingException {
     StringBuilder sb = new StringBuilder();
 
-    sb.append("\n").append(message).append("\n").append("דו\"ח שיעורים\n");
+    sb.append("\n").append(message).append("\n");
 
     for (Collection<SalaryInfo> salaries : teacherOutput.classNameToSalariesInfo.values()) {
-      tableFormatter.formatSingleTeacherSalaries(salaries, OUTPUT_COLUMNS, charset, sb);
+      String htmlTable = tableFormatter.toHtml(salaries, OUTPUT_COLUMNS);
+      sb.append(htmlTable).append("\n");
     }
     sb.append("סה\"כ בגין שיעורים: ").append(teacherOutput.totalPayment).append(" ש״ח").append("\n");
     sb.append("\n").append("תודה").append("\n\n");

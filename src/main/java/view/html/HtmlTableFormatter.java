@@ -24,7 +24,7 @@ public class HtmlTableFormatter {
             andThen(salaryRow -> Lists.reverse(Lists.newArrayList(salaryRow)));//todo: ugly reversal of data to fit column names
   }
 
-  String toHtml(Collection<SalaryInfo> teacherSalaries, String[] columnNames) {
+  public String toHtml(Collection<SalaryInfo> teacherSalaries, String[] columnNames) {
     List<String> columnNamesList = Lists.newArrayList(columnNames);
 
     return
