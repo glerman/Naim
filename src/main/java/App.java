@@ -7,11 +7,11 @@ import file.FileReader;
 import mail.Sender;
 import parse.CsvParser;
 import parse.CsvResult;
+import view.FormattedOutput;
 import view.TeacherOutputFormatter;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,7 +39,7 @@ public class App {
     }
   }
 
-  enum MailToSend {ONE, ALL}
+  enum TeachersToIterate {ONE, ALL}
 
   private static void runApp(String[] args) {
     ReportAggregator.instance.appInput(args);
@@ -48,7 +48,7 @@ public class App {
     String charset = args[2];
     boolean sendMails = Boolean.valueOf(args[3]);
     boolean sendFromNaim = Boolean.valueOf(args[4]);
-    MailToSend mailToSend = MailToSend.valueOf(args[5]);
+    TeachersToIterate teachersToIterate = TeachersToIterate.valueOf(args[5]);
 
     Optional<List<String>> salaryLines = fileReader.read(salariesFilePath, charset);
     Optional<List<String>> teacherLines = fileReader.read(teacherFilePath, charset);
@@ -71,7 +71,7 @@ public class App {
       }
       for (Map.Entry<String, TeacherOutput> teacherToOutput : teacherOutputs.entrySet()) {
         appLogic(teacherToOutput.getKey(), teacherToOutput.getValue(), sender);
-        if (mailToSend.equals(MailToSend.ONE)) {
+        if (teachersToIterate.equals(TeachersToIterate.ONE)) {
           break;
         }
       }
@@ -84,32 +84,30 @@ public class App {
       ReportAggregator.instance.addTeacherWithoutEmail(teacherName);
       return;
     }
-    StringBuilder formattedTeacherOutput;
-    try {
-      formattedTeacherOutput = formatter.formatTeacherOutput(teacherOutput);
-    } catch (UnsupportedEncodingException e) {
-      ReportAggregator.instance.formattingError(teacherName, e);
-      return;
-    }
-    String subjectLine = formatter.formatSubjectLine(teacherName);
+    FormattedOutput formattedTeacherOutput = formatter.formatTeacherOutput(teacherName, teacherOutput);
     if (sender.isPresent()) {
-      String emailBodyText = formattedTeacherOutput.toString();
       try {
         ReportAggregator.instance.incSendMailAttempt();
         sender.get().sendMail(
                 teacher.getEmail(),
-                subjectLine,
-                emailBodyText);
+                formattedTeacherOutput);
         Thread.sleep(500);
       } catch (Exception e) {
-        ReportAggregator.instance.sendMailFailure("Failed to send teacher mail", teacher, subjectLine, e);
+        ReportAggregator.instance.sendMailFailure("Failed to send teacher mail", teacher, formattedTeacherOutput.subject(), e);
       }
     }
-    //Add subject and email to the printed version
-    formattedTeacherOutput.append("\n").append(subjectLine).append("\n").append(teacher.getEmail());
-    System.out.println(formattedTeacherOutput);
+    printToScreen(teacher, formattedTeacherOutput);
   }
 
+  private static void printToScreen(Teacher teacher, FormattedOutput formattedTeacherOutput) {
+    System.out.println(teacher.getEmail());
+    System.out.println(formattedTeacherOutput.subject());
+    System.out.println(formattedTeacherOutput.header());
+    System.out.println(formattedTeacherOutput.salaryTablesHtml());
+    System.out.println(formattedTeacherOutput.footer());
+    System.out.println();
+    System.out.println();
+  }
 
 
   private static void appLogic(String charset, boolean sendMails, boolean sendFromNaim,
@@ -124,7 +122,7 @@ public class App {
 //      }
 //      StringBuilder formattedTeacherOutput = null;
 //      try {
-//        formattedTeacherOutput = formatter.formatTeacherOutput(charset, teacherOutput);
+//        formattedTeacherOutput = formatter.formatSalaryTables(charset, teacherOutput);
 //      } catch (UnsupportedEncodingException e) {
 //        ReportAggregator.instance.teacherOutputFormattingError(teacherName, e, charset);
 //        return;

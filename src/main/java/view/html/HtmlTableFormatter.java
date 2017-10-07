@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import domain.SalaryInfo;
 import j2html.TagCreator;
 import j2html.attributes.Attr;
+import j2html.tags.ContainerTag;
 import j2html.tags.DomContent;
 import view.SalaryInfoToOutputRow;
 
@@ -13,9 +14,9 @@ import java.util.function.Function;
 
 import static j2html.TagCreator.*;
 
-public class HtmlTableFormatter {
 
-  private static final String tableCaption = "דו״ח שיעורים";
+//todo: hebrew table text in gmails show up as ?
+public class HtmlTableFormatter {
 
   private final Function<SalaryInfo, List<Object>> salaryInfoToOutputRow;
 
@@ -24,30 +25,30 @@ public class HtmlTableFormatter {
             andThen(salaryRow -> Lists.reverse(Lists.newArrayList(salaryRow)));//todo: ugly reversal of data to fit column names
   }
 
-  public String toHtml(Collection<SalaryInfo> teacherSalaries, String[] columnNames) {
+  public String toHtml(Collection<Collection<SalaryInfo>> salariesPerClass, String[] columnNames) {
     List<String> columnNamesList = Lists.newArrayList(columnNames);
 
-    return
-            html(
-              head(
-                      style("table, th, td {\n" +
+    return html(
+              meta().attr(Attr.CHARSET, "UTF-8"),
+              head(style("table, th, td {\n" +
                               "            border: 1px solid black;\n" +
                               "            text-align: right;\n" +
-                              "        }\n" +
-                              "        caption {\n" +
-                              "            display: table-caption;\n" +
-                              "            text-align: right;\n" +
-                              "        }")
-              ),
-              body(
-                      table(caption(tableCaption),
-                            tr(each(columnNamesList, TagCreator::th)),
-                            each(teacherSalaries, salaryInfo -> {
-                              DomContent tds = each(salaryInfoToOutputRow.apply(salaryInfo), cellDataObject -> TagCreator.td(cellDataObject.toString()));
-                              return tr(tds);
-                            })
-                      ).attr(Attr.STYLE, "width:100%").attr(Attr.ALIGN, "right")
-              )
-            ).renderFormatted();
+                              "        }")),
+              body(each(salariesPerClass,
+                      classSalaries -> tableTagWithColumnAndDataRows(classSalaries, columnNamesList)))
+            ).attr(Attr.LANG, "he").
+      renderFormatted();
+  }
+
+  private ContainerTag tableTagWithColumnAndDataRows(Collection<SalaryInfo> teacherSalaries, List<String> columnNamesList) {
+    return table(
+            tr(each(columnNamesList, TagCreator::th)),
+            each(teacherSalaries, salaryInfo -> {
+              DomContent tds = each(salaryInfoToOutputRow.apply(salaryInfo), cellDataObject -> TagCreator.td(cellDataObject.toString()));
+              return tr(tds);
+            })
+    ).attr(Attr.STYLE, "width: 100%;margin-bottom: 30px;border: 1px solid black;text-align: right").
+      attr(Attr.ALIGN, "right").
+      attr(Attr.LANG, "he");
   }
 }

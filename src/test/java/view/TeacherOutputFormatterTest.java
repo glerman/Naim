@@ -16,8 +16,8 @@ public class TeacherOutputFormatterTest {
     Map<String, Collection<SalaryInfo>> map = Collections.singletonMap("class", ViewTestDataGenerator.salaries);
     int sum = map.values().stream().flatMap(Collection::stream).mapToInt(SalaryInfo::getPayment).sum();
     TeacherOutput teacherOutput = new TeacherOutput(map, sum);
-    StringBuilder stringBuilder = formatter.formatTeacherOutput(teacherOutput);
+    FormattedOutput formattedOutput = formatter.formatTeacherOutput("teach", teacherOutput);
 
-    System.out.println(stringBuilder.toString());
+    System.out.println(formattedOutput.toString());
   }
 }

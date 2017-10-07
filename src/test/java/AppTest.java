@@ -13,7 +13,7 @@ public class AppTest {
             "UTF-8",
             sendMails,
             sendFromNaim,
-            App.MailToSend.ONE.toString()
+            App.TeachersToIterate.ONE.toString()
     };
     App.main(args);
   }
