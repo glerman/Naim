@@ -39,6 +39,8 @@ public class App {
     }
   }
 
+  enum MailToSend {ONE, ALL}
+
   private static void runApp(String[] args) {
     ReportAggregator.instance.appInput(args);
     String salariesFilePath = args[0];
@@ -46,6 +48,7 @@ public class App {
     String charset = args[2];
     boolean sendMails = Boolean.valueOf(args[3]);
     boolean sendFromNaim = Boolean.valueOf(args[4]);
+    MailToSend mailToSend = MailToSend.valueOf(args[5]);
 
     Optional<List<String>> salaryLines = fileReader.read(salariesFilePath, charset);
     Optional<List<String>> teacherLines = fileReader.read(teacherFilePath, charset);
@@ -66,12 +69,16 @@ public class App {
         ReportAggregator.instance.ioError("Failed to create mail service instance", e);
         return;
       }
-      teacherOutputs.forEach((teacherName, teacherOutput) ->
-              appLogic(teacherName, teacherOutput, charset, sender));
+      for (Map.Entry<String, TeacherOutput> teacherToOutput : teacherOutputs.entrySet()) {
+        appLogic(teacherToOutput.getKey(), teacherToOutput.getValue(), sender);
+        if (mailToSend.equals(MailToSend.ONE)) {
+          break;
+        }
+      }
     }
   }
 
-  private static void appLogic(String teacherName, TeacherOutput teacherOutput, String charset, Optional<Sender> sender) {
+  private static void appLogic(String teacherName, TeacherOutput teacherOutput, Optional<Sender> sender) {
     Teacher teacher = teacherRegistry.getTeacher(teacherName);
     if (teacher == null) {
       ReportAggregator.instance.addTeacherWithoutEmail(teacherName);

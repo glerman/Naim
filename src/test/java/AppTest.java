@@ -12,7 +12,8 @@ public class AppTest {
             InputReaderHelper.teachersFilePath,
             "UTF-8",
             sendMails,
-            sendFromNaim
+            sendFromNaim,
+            App.MailToSend.ONE.toString()
     };
     App.main(args);
   }
