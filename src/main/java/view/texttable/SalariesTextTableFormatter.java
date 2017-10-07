@@ -2,6 +2,7 @@ package view.texttable;
 
 import dnl.utils.text.table.TextTable;
 import domain.SalaryInfo;
+import view.SalaryInfoToOutputRow;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -10,6 +11,11 @@ import java.util.Collection;
 
 public class SalariesTextTableFormatter {
 
+  private final SalaryInfoToOutputRow salaryInfoToOutputRow;
+
+  public SalariesTextTableFormatter() {
+    this.salaryInfoToOutputRow = new SalaryInfoToOutputRow();
+  }
 
   public void formatSingleTeacherSalaries(Collection<SalaryInfo> teacherSalaries, String[] columnNames, String charset, StringBuilder sb) throws UnsupportedEncodingException {
     TextTable outputTable = toTextTable(teacherSalaries, columnNames);
@@ -23,11 +29,7 @@ public class SalariesTextTableFormatter {
     Object[][] salariesOutputData = new Object[teacherSalaries.size()][columnNames.length];
     int i = 0;
     for (SalaryInfo salaryInfo : teacherSalaries) {
-      salariesOutputData[i][0] = salaryInfo.getClassName();
-      salariesOutputData[i][1] = salaryInfo.getRoom();
-      salariesOutputData[i][2] = salaryInfo.getDate();
-      salariesOutputData[i][3] = salaryInfo.getAttendees();
-      salariesOutputData[i][4] = salaryInfo.getPayment();
+      salariesOutputData[i] = salaryInfoToOutputRow.apply(salaryInfo);
       i++;
     }
     return new TextTable(columnNames, salariesOutputData);

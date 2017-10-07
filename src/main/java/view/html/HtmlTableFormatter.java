@@ -3,15 +3,26 @@ package view.html;
 import com.google.common.collect.Lists;
 import domain.SalaryInfo;
 import j2html.TagCreator;
+import j2html.attributes.Attr;
+import j2html.tags.DomContent;
+import view.SalaryInfoToOutputRow;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 import static j2html.TagCreator.*;
 
 public class HtmlTableFormatter {
 
   private static final String tableCaption = "דו״ח שיעורים";
+
+  private final Function<SalaryInfo, List<Object>> salaryInfoToOutputRow;
+
+  public HtmlTableFormatter() {
+    salaryInfoToOutputRow = new SalaryInfoToOutputRow().
+            andThen(salaryRow -> Lists.reverse(Lists.newArrayList(salaryRow)));//todo: ugly reversal of data to fit column names
+  }
 
   String toHtml(Collection<SalaryInfo> teacherSalaries, String[] columnNames) {
     List<String> columnNamesList = Lists.newArrayList(columnNames);
@@ -29,88 +40,14 @@ public class HtmlTableFormatter {
                               "        }")
               ),
               body(
-                      table(text("style=\"width:100%\""),
-                            caption(tableCaption),
-                            tr(each(columnNamesList, TagCreator::text))
-                      )
-
+                      table(caption(tableCaption),
+                            tr(each(columnNamesList, TagCreator::th)),
+                            each(teacherSalaries, salaryInfo -> {
+                              DomContent tds = each(salaryInfoToOutputRow.apply(salaryInfo), cellDataObject -> TagCreator.td(cellDataObject.toString()));
+                              return tr(tds);
+                            })
+                      ).attr(Attr.STYLE, "width:100%").attr(Attr.ALIGN, "right")
               )
             ).renderFormatted();
-    /*
-    StringBuilder htmlBuilder = new StringBuilder();
-    htmlBuilder.append("<!DOCTYPE html>").
-            append("<html>").
-            append("<head>").
-              append("<style>").
-                append("table, th, td ").append("{").
-                append("boarder: 1px solid black;").
-                append("text-align: right;").
-                append("}").
-                append("caption {").
-                append("display: table-caption;").
-                append("text-align: right;").
-                append("}").
-              append("</style>").
-              append("</head>").
-            append("<body>").
-              append("<table style=\"width:100%\">").
-                append("<caption>").append(tableCaption).append("</caption>").
-                append("<tr>");
-    Lists.newArrayList(columnNames).forEach(columnName -> htmlBuilder.append("<th>").append(columnName).append("</th>"));
-                htmlBuilder.append("</tr>").
-                        append("</table>").
-                        append("</body>").
-                        append("</html>");
-
-
-
-    return htmlBuilder.toString();
-    */
   }
-
-  /*
-  <!DOCTYPE html>
-<html>
-<head>
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            text-align: right;
-        }
-        caption {
-            display: table-caption;
-            text-align: right;
-        }
-    </style>
-</head>
-<body>
-
-<table style="width:100%">
-    <caption>דו״ח שיעורים</caption>
-    <tr>
-        <th>גיל</th>
-        <th>שם משפחה</th>
-        <th>שם פרטי</th>
-    </tr>
-    <tr>
-        <td>50</td>
-        <td>משפחה2</td>
-        <td>שם1</td>
-    </tr>
-    <tr>
-        <td>94</td>
-        <td>משפחה2</td>
-        <td>שם2</td>
-    </tr>
-    <tr>
-        <td>80</td>
-        <td>משפחה3</td>
-        <td>שם3</td>
-    </tr>
-</table>
-
-</body>
-</html>
-
-   */
 }

@@ -2,10 +2,10 @@ package view.html;
 
 import org.junit.Before;
 import org.junit.Test;
+import view.ViewTestDataGenerator;
 
 public class HtmlTableFormatterTest {
 
-  private String[] columnNames = {"כיתה", "אולם", "תאריך", "משתתפים", "תעריף"};
   private HtmlTableFormatter formatter;
 
   @Before
@@ -15,7 +15,7 @@ public class HtmlTableFormatterTest {
 
   @Test
   public void test() throws Exception {
-    String html = formatter.toHtml(null, columnNames);
+    String html = formatter.toHtml(ViewTestDataGenerator.salaries, ViewTestDataGenerator.columnNames);
 
     System.out.println(html);
   }
