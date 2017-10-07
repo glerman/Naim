@@ -15,7 +15,9 @@ import java.util.function.Function;
 import static j2html.TagCreator.*;
 
 
-//todo: hebrew table text in gmails show up as ?
+//todo: hebrew table text in gmails show up as ???
+//todo: need to find a lib to inline the css before sending the mail
+//todo: make sure the data and columns are aligned
 public class HtmlTableFormatter {
 
   private final Function<SalaryInfo, List<Object>> salaryInfoToOutputRow;
@@ -47,8 +49,6 @@ public class HtmlTableFormatter {
               DomContent tds = each(salaryInfoToOutputRow.apply(salaryInfo), cellDataObject -> TagCreator.td(cellDataObject.toString()));
               return tr(tds);
             })
-    ).attr(Attr.STYLE, "width: 100%;margin-bottom: 30px;border: 1px solid black;text-align: right").
-      attr(Attr.ALIGN, "right").
-      attr(Attr.LANG, "he");
+    ).attr(Attr.STYLE, "width: 100%;margin-bottom: 30px");
   }
 }
