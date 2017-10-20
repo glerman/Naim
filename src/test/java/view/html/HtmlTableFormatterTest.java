@@ -1,5 +1,6 @@
 package view.html;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import domain.SalaryInfo;
 import org.junit.Before;
@@ -20,11 +21,25 @@ public class HtmlTableFormatterTest {
   }
 
   @Test
+  public void name() throws Exception {
+    String a = "ת";
+
+    a.chars().forEach(System.out::println);
+    System.out.println((int)a.charAt(0));
+
+    char[] chars = Character.toChars(1514);
+    System.out.println(Lists.newArrayList(chars));
+    System.out.println(new String(chars));
+  }
+
+  @Test
   public void test() throws Exception {
     Map<String, Collection<SalaryInfo>> classToSalaries = Maps.newHashMap();
     ViewTestDataGenerator.salaries.forEach(salary -> classToSalaries.put(salary.getClassName(), Collections.singleton(salary)));
     String html = formatter.toHtml(classToSalaries.values(), ViewTestDataGenerator.columnNames);
 
-    System.out.println(html);
+//    System.out.println(html);
+
+    InlineCss.encodeHebrewWithEntities(html);
   }
 }
