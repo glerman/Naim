@@ -38,8 +38,6 @@ public class HtmlTableFormatterTest {
     ViewTestDataGenerator.salaries.forEach(salary -> classToSalaries.put(salary.getClassName(), Collections.singleton(salary)));
     String html = formatter.toHtml(classToSalaries.values(), ViewTestDataGenerator.columnNames);
 
-//    System.out.println(html);
-
-    InlineCss.encodeHebrewWithEntities(html);
+    System.out.println(html);
   }
 }

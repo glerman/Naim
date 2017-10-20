@@ -47,15 +47,12 @@ public class InlineCss {
 
   public static String encodeHebrewWithEntities(String html) {
     Document doc = Jsoup.parse(html);
-//    AtomicInteger i = new AtomicInteger();
+//    doc.outputSettings(todo: put output settings without escaping);
     doc.select("th, td").forEach(element -> {
-      //todo: sometimes no child ???
-      TextNode textNode = (TextNode) element.childNode(0);
+      TextNode textNode = (TextNode) element.childNodes().get(0);
       String text = textNode.text();
       String convertedText = convertHebrewText(text);
-      textNode.text("");
-      textNode.attr("data", convertedText);
-//      i.incrementAndGet();
+      textNode.text(convertedText);
     });
     return doc.html();
   }
