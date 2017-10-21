@@ -29,7 +29,7 @@ public class SalariesTextTableFormatter {
     Object[][] salariesOutputData = new Object[teacherSalaries.size()][columnNames.length];
     int i = 0;
     for (SalaryInfo salaryInfo : teacherSalaries) {
-      salariesOutputData[i] = salaryInfoToOutputRow.apply(salaryInfo);
+      salariesOutputData[i] = salaryInfoToOutputRow.apply(salaryInfo).toArray();
       i++;
     }
     return new TextTable(columnNames, salariesOutputData);

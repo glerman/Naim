@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ViewTestDataGenerator {
 
-  public static String[] columnNames = {"כיתה", "אולם", "תאריך", "משתתפים", "תעריף"};
+  public static final String[] columnNames = {"תעריף","משתתפים","תאריך","אולם","כיתה"};
 
   public static List<SalaryInfo> salaries = Lists.newArrayList(
     new SalaryInfo(1, "teacher1", "עברית", "room1", "01/09", 5, 80, null),

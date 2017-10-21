@@ -1,15 +1,13 @@
 package view;
 
-import domain.SalaryInfo;
 import domain.TeacherOutput;
 import view.html.HtmlTableFormatter;
 
-import java.util.Collection;
-
 //todo: test format via system test
+//todo: make sure all text is aligned to the right
 public class TeacherOutputFormatter {
 
-  private static final String[] OUTPUT_COLUMNS = {"כיתה", "אולם", "תאריך", "משתתפים", "תעריף"};
+  private static final String[] OUTPUT_COLUMNS = {"תעריף","משתתפים","תאריך","אולם","כיתה"};
   private static final String subjectSuffix = "פירוט תשלום עבור חודש - 09/2017";
   private static final String message = "הי,\n" +
           "\n" +

@@ -4,23 +4,17 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
-import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
-import sun.text.normalizer.UnicodeSet;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class InlineCss {
+class HtmlUtils {
 
   private final static String style = "style";
   private static final String delims = "{}";
 
-  public static String inline(final String html) {
+  static String inline(final String html) {
     Document doc = Jsoup.parse(html);
 
     Elements els = doc.select(style);// to get all the style elements
@@ -45,16 +39,15 @@ public class InlineCss {
     return doc.html();
   }
 
-  public static String encodeHebrewWithEntities(String html) {
+  static String encodeHebrewWithEntities(String html) {
     Document doc = Jsoup.parse(html);
-//    doc.outputSettings(todo: put output settings without escaping);
     doc.select("th, td").forEach(element -> {
       TextNode textNode = (TextNode) element.childNodes().get(0);
       String text = textNode.text();
       String convertedText = convertHebrewText(text);
       textNode.text(convertedText);
     });
-    return doc.html();
+    return doc.html().replaceAll("&amp;", "&");
   }
 
   private static String convertHebrewText(String text) {

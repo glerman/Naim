@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 public class SalariesTextTableFormatterTest {
 
-
   private SalariesTextTableFormatter formatter;
 
   @Before
