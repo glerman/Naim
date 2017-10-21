@@ -1,12 +1,12 @@
-import report.ReportAggregator;
-import logic.SalariesLogic;
 import domain.Teacher;
 import domain.TeacherOutput;
 import domain.TeacherRegistry;
 import file.FileReader;
+import logic.SalariesLogic;
 import mail.Sender;
 import parse.CsvParser;
 import parse.CsvResult;
+import report.ReportAggregator;
 import view.FormattedOutput;
 import view.TeacherOutputFormatter;
 
@@ -49,6 +49,7 @@ public class App {
     boolean sendMails = Boolean.valueOf(args[3]);
     boolean sendFromNaim = Boolean.valueOf(args[4]);
     TeachersToIterate teachersToIterate = TeachersToIterate.valueOf(args[5]);
+    String receiptTo = args[6];
 
     Optional<List<String>> salaryLines = fileReader.read(salariesFilePath, charset);
     Optional<List<String>> teacherLines = fileReader.read(teacherFilePath, charset);
@@ -70,7 +71,7 @@ public class App {
         return;
       }
       for (Map.Entry<String, TeacherOutput> teacherToOutput : teacherOutputs.entrySet()) {
-        appLogic(teacherToOutput.getKey(), teacherToOutput.getValue(), sender);
+        appLogic(teacherToOutput.getKey(), teacherToOutput.getValue(), sender, receiptTo);
         if (teachersToIterate.equals(TeachersToIterate.ONE)) {
           break;
         }
@@ -78,13 +79,13 @@ public class App {
     }
   }
 
-  private static void appLogic(String teacherName, TeacherOutput teacherOutput, Optional<Sender> sender) {
+  private static void appLogic(String teacherName, TeacherOutput teacherOutput, Optional<Sender> sender, String receiptTo) {
     Teacher teacher = teacherRegistry.getTeacher(teacherName);
     if (teacher == null) {
       ReportAggregator.instance.addTeacherWithoutEmail(teacherName);
       return;
     }
-    FormattedOutput formattedTeacherOutput = formatter.formatTeacherOutput(teacherName, teacherOutput);
+    FormattedOutput formattedTeacherOutput = formatter.formatTeacherOutput(teacherName, teacherOutput, receiptTo);
     if (sender.isPresent()) {
       try {
         ReportAggregator.instance.incSendMailAttempt();

@@ -1,22 +1,19 @@
 package view;
 
+import domain.SalaryInfo;
 import domain.TeacherOutput;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import view.html.HtmlTableFormatter;
 
 //todo: test format via system test
 //todo: make sure all text is aligned to the right
 public class TeacherOutputFormatter {
 
+  private static DateTimeFormatter inputDtf = DateTimeFormat.forPattern("dd/MM/yyyy");
+  private static DateTimeFormatter outputDtf = DateTimeFormat.forPattern("MM/yyyy");
   private static final String[] OUTPUT_COLUMNS = {"תעריף","משתתפים","תאריך","אולם","כיתה"};
-  private static final String subjectSuffix = "פירוט תשלום עבור חודש - 09/2017";
-  private static final String message = "הי,\n" +
-          "\n" +
-          "להלן פירוט תשלומים עבור חודש 09/2017 \n" +//todo: make month a param
-          "נא לרשום על הקבלה / חשבונית עבור \"אלה בן אהרון\" על הסכום הנ״ל \n" + //todo: make the name a param
-          "(בתוספת מע\"מ במידה וצריך).\n" +
-          "\n" +
-          "דו״ח שיעורים" +
-          "\n";
 
   private final HtmlTableFormatter tableFormatter;
 
@@ -24,17 +21,34 @@ public class TeacherOutputFormatter {
     tableFormatter = new HtmlTableFormatter();
   }
 
-  public FormattedOutput formatTeacherOutput(String teacherName, TeacherOutput teacherOutput) {
+  public FormattedOutput formatTeacherOutput(String teacherName, TeacherOutput teacherOutput, String reciptTo) {
+
+    String outputDate = extractDate(teacherOutput);
     return FormattedOutput.create(
-            formatSubjectLine(teacherName),
-            formatMailHeader(),
+            formatSubjectLine(teacherName, outputDate),
+            formatMailHeader(reciptTo, outputDate),
             formatSalaryTables(teacherOutput),
             formatMailFooter(teacherOutput)
     );
   }
 
-  private String formatMailHeader() {
-    return message;
+  private String formatMailHeader(String receiptTo, String outputDate) {
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("היי").append("\n");
+    sb.append("להלן פירוט תשלומים עבור חודש ").append(outputDate).append("\n");
+    sb.append("נא לרשום על הקבלה / חשבונית עבור ").append('"').append(receiptTo).append("\" ").append("על הסכום הנ״ל").append("\n");
+    sb.append("(בתוספת מע\"מ במידה וצריך).").append("\n");
+    sb.append("\n");
+    sb.append("דו״ח שיעורים").append("\n");
+    return sb.toString();
+  }
+
+  private String extractDate(TeacherOutput teacherOutput) {
+    SalaryInfo salaryInfo = teacherOutput.classNameToSalariesInfo.values().iterator().next().iterator().next();
+    String origDate = salaryInfo.getDate();
+    DateTime dateTime = inputDtf.parseDateTime(origDate);
+    return outputDtf.print(dateTime);
   }
 
   private String formatMailFooter(TeacherOutput teacherOutput) {
@@ -54,7 +68,7 @@ public class TeacherOutputFormatter {
     return tableFormatter.toHtml(teacherOutput.classNameToSalariesInfo.values(), OUTPUT_COLUMNS);
   }
 
-  private String formatSubjectLine(String teacherName) {
-    return String.format("%s %s", teacherName, subjectSuffix);
+  private String formatSubjectLine(String teacherName, String outputDate) {
+    return String.format("%s - פירוט תשלום עבור חודש %s", outputDate, teacherName);
   }
 }

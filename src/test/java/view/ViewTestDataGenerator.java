@@ -10,9 +10,9 @@ public class ViewTestDataGenerator {
   public static final String[] columnNames = {"תעריף","משתתפים","תאריך","אולם","כיתה"};
 
   public static List<SalaryInfo> salaries = Lists.newArrayList(
-    new SalaryInfo(1, "teacher1", "עברית", "room1", "01/09", 5, 80, null),
-    new SalaryInfo(2, "teacher2", "class2", "room2", "02/09", 6, 90, null),
-    new SalaryInfo(3, "teacher3", "class3", "room3", "03/09", 7, 100, null)
+    new SalaryInfo(1, "teacher1", "עברית", "room1", "01/10/2017", 5, 80, null),
+    new SalaryInfo(2, "teacher2", "class2", "room2", "02/10/2017", 6, 90, null),
+    new SalaryInfo(3, "teacher3", "class3", "room3", "03/10/2017", 7, 100, null)
   );
 
   public static void main(String[] args) {
