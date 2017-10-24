@@ -1,3 +1,4 @@
+import logic.AppLogic;
 import org.junit.Test;
 import util.InputReaderHelper;
 
@@ -13,7 +14,7 @@ public class AppTest {
             "UTF-8",
             sendMails,
             sendFromNaim,
-            App.TeachersToIterate.ONE.toString(),
+            AppLogic.TeachersToIterate.ONE.toString(),
             "הגברת שושנה"
     };
     App.main(args);

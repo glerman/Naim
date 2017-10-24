@@ -1,3 +1,5 @@
+package logic;
+
 import domain.Teacher;
 import domain.TeacherOutput;
 import domain.TeacherRegistry;
@@ -24,7 +26,7 @@ public class AppLogic {
   private final StringBuilder previewBuilder = new StringBuilder();
 
 
-  public String start(String salariesFilePath, String teacherFilePath, String charset, boolean sendMails, boolean sendFromNaim, App.TeachersToIterate teachersToIterate, String receiptTo) {
+  public String start(String salariesFilePath, String teacherFilePath, String charset, boolean sendMails, boolean sendFromNaim, TeachersToIterate teachersToIterate, String receiptTo) {
     Optional<List<String>> salaryLines = fileReader.read(salariesFilePath, charset);
     Optional<List<String>> teacherLines = fileReader.read(teacherFilePath, charset);
     if (salaryLines.isPresent() && teacherLines.isPresent()) {
@@ -46,7 +48,7 @@ public class AppLogic {
       }
       for (Map.Entry<String, TeacherOutput> teacherToOutput : teacherOutputs.entrySet()) {
         formatAndSendTeacher(teacherToOutput.getKey(), teacherToOutput.getValue(), sender, receiptTo);
-        if (teachersToIterate.equals(App.TeachersToIterate.ONE)) {
+        if (teachersToIterate.equals(TeachersToIterate.ONE)) {
           break;
         }
       }
@@ -84,4 +86,6 @@ public class AppLogic {
     previewBuilder.append(formattedTeacherOutput.footer()).append("\n");
     previewBuilder.append("\n\n\n");
   }
+
+  public enum TeachersToIterate {ONE, ALL}
 }

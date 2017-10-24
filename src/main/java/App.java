@@ -1,3 +1,5 @@
+import logic.AppLogic;
+import logic.AppLogic.TeachersToIterate;
 import report.ReportAggregator;
 
 import javax.mail.MessagingException;
@@ -20,8 +22,6 @@ public class App {
       System.out.println(ReportAggregator.instance.report());
     }
   }
-
-  enum TeachersToIterate {ONE, ALL}
 
   private static void runApp(String[] args) {
     ReportAggregator.instance.appInput(args);
