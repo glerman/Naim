@@ -23,13 +23,6 @@ public class SalaryInfoParserTest {
   }
 
   @Test
-  public void testDateFormat() throws Exception {
-
-    SalaryInfo salaryInfo = parser.parse(csvResult.data[0]).get();
-    Assert.assertEquals("02/08", salaryInfo.getDate());
-  }
-
-  @Test
   public void testAttendees() throws Exception {
     SalaryInfo salaryInfo = parser.parse(csvResult.data[1]).get();
     Assert.assertEquals(4, salaryInfo.getAttendees());

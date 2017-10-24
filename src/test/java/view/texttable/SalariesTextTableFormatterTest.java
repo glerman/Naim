@@ -4,6 +4,7 @@ import dnl.utils.text.table.TextTable;
 import domain.SalaryInfo;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import view.ViewTestDataGenerator;
 
@@ -11,6 +12,7 @@ import javax.swing.table.TableModel;
 import javax.swing.text.View;
 import java.util.ArrayList;
 
+@Ignore
 public class SalariesTextTableFormatterTest {
 
   private SalariesTextTableFormatter formatter;
