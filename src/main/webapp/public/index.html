@@ -1,0 +1,120 @@
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <link href="../resources/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../resources/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="../resources/jquery.json-view.min.js"></script>
+    <link href="../resources/jquery.json-view.min.css" rel="stylesheet">
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>ORex Dashboard</title>
+
+    <script type="text/javascript" charset="utf-8">
+
+        function execute(docId, widgetId, numRecs, userPlatform, recType, uuid, readFromMemCache, writeToMemCache, abTestVarId) {
+            var requestJson = "{\"docId\":" + docId + ",\"recType\":\"" + recType + "\"," +
+                        "\"widgetId\":" + widgetId + ",\"userPlatform\":\"" + userPlatform + "\"," +
+                        "\"numRequiredOrganicRecs\":" + numRecs + "," +
+                        "\"uuid\":\"" + uuid + "\"," +
+                        "\"shouldReadFromMemCache\":\"" + readFromMemCache + "\"," +
+                        "\"shouldWriteToMemCache\":\"" + writeToMemCache + "\"," +
+                        "\"abTestVarId\":\"" + abTestVarId + "\"}";
+                var url = '/ORex/diagnostics/getRecs?request=' + requestJson;
+                var request = $('#request');
+                request.empty();
+                request.text(url);
+                request.wrapInner('<a href="' + encodeURI(url) + '">');
+                $('#request-panel').show();
+                $.getJSON(url, function(data) {
+                    var response = $('#response');
+                    response.empty();
+                    response.jsonView(JSON.stringify(data));
+                    $('#response-panel').show();
+                });
+        }
+    </script>
+</head>
+
+<body>
+<div>
+    <h1 align="center">Salary Mail Service</h1>
+</div>
+
+<div style="clear:both;"></div>
+
+<div>
+
+    <div>
+        <span class="input-group col-lg-1" style="float: left ;margin: 10px;">
+            <input id="salariesFile" type="file" style="display:none;" />
+            <input class="btn-basic" type="button" value="Select Salaries File" onclick="$.getElementById('salariesFile').click();" />
+        </span>
+
+        <span class="input-group col-lg-2" style="float: left ;margin: 10px;">
+            <input id="teachersFile" type="file" style="display:none;" />
+            <input class="btn-basic" type="button" value="Select teachers File" onclick="$.getElementById('teachersFile').click();" />
+        </span>
+    </div>
+
+    <div>
+        <span class="input-group col-lg-2" style="float: left ;margin: 10px;">
+            <span class="input-group-addon">Receipt To</span>
+            <input id="receiptTo" class="form-control" type="text" value="נורמל מחקר"/>
+        </span>
+
+        <span class="input-group col-lg-2" style="float: left ;margin: 10px;">
+            <span class="input-group-addon">Which Teachers</span>
+            <select id="teachersToIterate" class="form-control">
+                <option value="ONE" selected="selected">One</option>
+                <option value="ALL">All</option>
+            </select>
+        </span>
+    </div>
+
+    <div class="btn-group" data-toggle="buttons" style="float: left ;margin: 10px;">
+        <label class="checkbox">
+            <input id="sendMails" type="checkbox" autocomplete="off">Send Mails
+        </label>
+        <label class="checkbox">
+            <input id="sendFromNaim" type="checkbox" autocomplete="off">Send From Naim
+        </label>
+    </div>
+
+</div>
+
+<div style="clear:both;"></div>
+
+<div>
+
+    <div style="clear:both;"></div>
+
+    <a class="btn btn-primary" style="float: left ;margin: 10px;"
+       onclick="
+                  var salariesFile = $('#salariesFile').val();
+                  var teachersFile = $('#teachersFile').val();
+                  var receiptTo = $('#receiptTo').val();
+                  var teachersToIterate = $('#teachersToIterate').val();
+                  var sendMails = document.getElementById('sendMails').checked;
+                  var sendFromNaim = document.getElementById('sendFromNaim').checked;
+                  execute(salariesFile, teachersFile, receiptTo, teachersToIterate, sendMails, sendFromNaim);
+    ">
+    Execute
+    </a>
+</div>
+
+<div style="clear:both;"></div>
+
+<div class="panel panel-default" id="request-panel" style="display: none;">
+    <div class="panel-heading">Request</div>
+    <div class="panel-body" id="request">
+    </div>
+</div>
+
+<div class="panel panel-default" id="response-panel" style="display: none;">
+    <div class="panel-heading">Response</div>
+    <div class="panel-body" id="response">
+    </div>
+</div>
+
+</body>
+</html>
