@@ -20,6 +20,9 @@ public class SalaryController {
             String.format(template, name));
   }
 
+  //todo: can't get full file path from browser (maybe use simple text box)
+  //todo: make panel outputs look better
+  //todo: add error controller
   @RequestMapping("/salary")
   public SalaryResponse salary(@RequestParam(value = "salariesFilePath") String salariesFilePath,
                      @RequestParam(value = "teacherFilePath") String teacherFilePath,
