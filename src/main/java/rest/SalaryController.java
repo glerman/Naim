@@ -21,8 +21,8 @@ public class SalaryController {
   }
 
   //todo: can't get full file path from browser (maybe use simple text box)
-  //todo: make panel outputs look better
   //todo: add error controller
+  //todo: support extra file with optional message per teacher
   @RequestMapping("/salary")
   public SalaryResponse salary(@RequestParam(value = "salariesFilePath") String salariesFilePath,
                      @RequestParam(value = "teacherFilePath") String teacherFilePath,
@@ -30,8 +30,10 @@ public class SalaryController {
                      @RequestParam(value = "sendMails") boolean sendMails,
                      @RequestParam(value = "sendFromNaim") boolean sendFromNaim,
                      @RequestParam(value = "teachersToIterate") AppLogic.TeachersToIterate teachersToIterate,
-                     @RequestParam(value = "receiptTo") String receiptTo) {
+                     @RequestParam(value = "receiptTo") String receiptTo,
+                     @RequestParam(value = "debug", defaultValue = "false") boolean debug) {
 
+    ReportAggregator.instance.init(debug);
     String salariesPreview = null;
     try {
       AppLogic appLogic = new AppLogic();

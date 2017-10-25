@@ -15,19 +15,28 @@ public class ReportAggregator {
 
   public static final ReportAggregator instance = new ReportAggregator();
 
-  final Set<String> teachersWithoutEmail;
-  final Set<DomainObjectParsingProblem> salaryParsingErrors;
-  final Set<DomainObjectParsingProblem> teacherParsingErrors;
-  int numMailsToSend;
-  int sentMailAttempt;
+  Set<String> teachersWithoutEmail;
+  Set<DomainObjectParsingProblem> salaryParsingErrors;
+  Set<DomainObjectParsingProblem> teacherParsingErrors;
+  private int numMailsToSend;
+  private int sentMailAttempt;
   private List<String> appInput;
   private List<String> userInputErrors;
   private Set<GeneralProblem> sendMailProblems;
   private Set<GeneralProblem> generalProblems;
   private Set<GeneralProblem> formattingErrors;
   private Set<Throwable> unexpectedErrors;
+  private boolean printFullStackTrace;
 
   private ReportAggregator() {
+    init(true);
+  }
+
+  public void init(boolean debug) {
+    this.printFullStackTrace = debug;
+    numMailsToSend = 0;
+    sentMailAttempt = 0;
+    appInput = Lists.newArrayList();
     teachersWithoutEmail = Sets.newHashSet();
     salaryParsingErrors = Sets.newHashSet();
     teacherParsingErrors = Sets.newHashSet();
@@ -55,7 +64,7 @@ public class ReportAggregator {
     reportProblemsCollection(teachersWithoutEmail, "Number of teachers without emails (send wasn't attempted): ", "The teachers without emails are: ", report);
     reportNumber(sentMailAttempt, "Send mail attempts: ", report);
     reportProblemsCollection(sendMailProblems, "Send mail failures: ", "Problems with sending mails were: ", report);
-    reportProblemsCollection(formattingErrors, "Formatting errors: ", "Formatting erros were: ", report);
+    reportProblemsCollection(formattingErrors, "Formatting errors: ", "Formatting errors were: ", report);
     return report.toString();
   }
 
@@ -63,9 +72,10 @@ public class ReportAggregator {
     report.append(numberPrefix).append(number).append("\n\n");
   }
 
-  private void reportProblemsCollection(Collection<?> collection, String sizePrefix, String collectionPrefix, StringBuilder report) {
-    report.append(sizePrefix).append(collection.size()).append("\n");
-    reportCollectionLineByLine(collection, collectionPrefix, report);
+  private void reportProblemsCollection(Collection<?> problems, String sizePrefix, String collectionPrefix, StringBuilder report) {
+    int problemsNum = problems.size();
+    report.append(sizePrefix).append(problemsNum).append("\n");
+    reportCollectionLineByLine(problems, collectionPrefix, report);
   }
 
   private void reportCollectionLineByLine(Collection<?> c, String collectionPrefix, StringBuilder report) {
@@ -73,7 +83,7 @@ public class ReportAggregator {
       report.append(collectionPrefix).append("\n");
       for (Object o : c) {
         final String objectString;
-        if (o instanceof Throwable) {
+        if (o instanceof Throwable && printFullStackTrace) {
           ByteArrayOutputStream out = new ByteArrayOutputStream();
           ((Throwable) o).printStackTrace(new PrintStream(out));
           objectString = out.toString();
@@ -102,7 +112,7 @@ public class ReportAggregator {
   }
 
   public void appInput(String[] args) {
-    appInput = Lists.newArrayList(args);
+    appInput.addAll(Lists.newArrayList(args));
   }
 
   public void sendMailFailure(String message, Teacher teacher, String subjectLine, Exception e) {

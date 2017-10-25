@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-
     <script type="text/javascript" charset="utf-8">
 
         function execute(salariesFile, teachersFile, receiptTo, teachersToIterate, sendMails, sendFromNaim) {
@@ -23,18 +22,25 @@
                 var report = data["report"];
                 if (report) {
                     var reportView = $('#reportView');
-                    reportView.empty();
-                    reportView.append(report);
-                    $('#report-panel').show();
+                    displayResponse(report, reportView);
                 }
                 var preview = data["salariesPreview"];
                 if (preview) {
                     var previewView = $('#previewView');
-                    previewView.empty();
-                    previewView.append(preview);
-                    $('#preview-panel').show();
+                    displayResponse(preview, previewView);
                 }
             });
+        }
+
+        function displayResponse(response, panelBody) {
+            response = convertNewLine(response);
+            panelBody.empty();
+            panelBody.append("<p>" + response + "</p>");
+            panelBody.parent().show();
+        }
+
+        function convertNewLine(str) {
+            return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
         }
     </script>
 </head>
