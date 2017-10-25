@@ -21,6 +21,7 @@ public class ReportAggregator {
   int numMailsToSend;
   int sentMailAttempt;
   private List<String> appInput;
+  private List<String> userInputErrors;
   private Set<GeneralProblem> sendMailProblems;
   private Set<GeneralProblem> generalProblems;
   private Set<GeneralProblem> formattingErrors;
@@ -34,6 +35,7 @@ public class ReportAggregator {
     generalProblems = Sets.newHashSet();
     unexpectedErrors = Sets.newHashSet();
     formattingErrors = Sets.newHashSet();
+    userInputErrors = Lists.newArrayList();
   }
 
   public void addTeacherWithoutEmail(final String teacherName) {
@@ -44,6 +46,7 @@ public class ReportAggregator {
     StringBuilder report = new StringBuilder();
 
     reportCollectionLineByLine(appInput, "App input: ", report);
+    reportProblemsCollection(userInputErrors, "User input errors: ", "User input errors were: ", report);
     reportProblemsCollection(unexpectedErrors, "Unexpected errors: ", "Unexpected errors were: ", report);
     reportProblemsCollection(generalProblems, "Input/Output errors: ", "Input/Output errors are: ", report);
     reportProblemsCollection(salaryParsingErrors, "Salary parsing errors: ", "The salary parsing errors were: ", report);
@@ -111,6 +114,10 @@ public class ReportAggregator {
 
   public void ioError(String message, Exception e) {
     generalProblems.add(GeneralProblem.create(message, e));
+  }
+
+  public void userInputError(String message) {
+    userInputErrors.add(message);
   }
 
   public void unexpectedError(Throwable t) {

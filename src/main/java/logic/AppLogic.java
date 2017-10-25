@@ -4,8 +4,8 @@ import domain.Teacher;
 import domain.TeacherOutput;
 import domain.TeacherRegistry;
 import file.FileReader;
-import logic.SalariesLogic;
 import mail.Sender;
+import org.apache.commons.lang.StringUtils;
 import parse.CsvParser;
 import parse.CsvResult;
 import report.ReportAggregator;
@@ -26,7 +26,12 @@ public class AppLogic {
   private final StringBuilder previewBuilder = new StringBuilder();
 
 
-  public String start(String salariesFilePath, String teacherFilePath, String charset, boolean sendMails, boolean sendFromNaim, TeachersToIterate teachersToIterate, String receiptTo) {
+  public String start(String salariesFilePath, String teacherFilePath, String charset, boolean sendMails, boolean sendFromNaim,
+                      TeachersToIterate teachersToIterate, String receiptTo) {
+
+    if (!validInput(salariesFilePath, teacherFilePath, charset, receiptTo)) {
+      return "";
+    }
     Optional<List<String>> salaryLines = fileReader.read(salariesFilePath, charset);
     Optional<List<String>> teacherLines = fileReader.read(teacherFilePath, charset);
     if (salaryLines.isPresent() && teacherLines.isPresent()) {
@@ -85,6 +90,27 @@ public class AppLogic {
     previewBuilder.append(formattedTeacherOutput.salaryTablesHtml()).append("\n");
     previewBuilder.append(formattedTeacherOutput.footer()).append("\n");
     previewBuilder.append("\n\n\n");
+  }
+
+  private boolean validInput(String salariesFilePath, String teacherFilePath, String charset, String receiptTo) {
+
+    if (StringUtils.isEmpty(salariesFilePath)) {
+      ReportAggregator.instance.userInputError("Missing salaries file path");
+      return false;
+    }
+    if (StringUtils.isEmpty(teacherFilePath)) {
+      ReportAggregator.instance.userInputError("Missing teachers file path");
+      return false;
+    }
+    if (StringUtils.isEmpty(charset)) {
+      ReportAggregator.instance.userInputError("Missing charset input");
+      return false;
+    }
+    if (StringUtils.isEmpty(receiptTo)) {
+      ReportAggregator.instance.userInputError("Missing receiptTo input");
+      return false;
+    }
+    return true;
   }
 
   public enum TeachersToIterate {ONE, ALL}
