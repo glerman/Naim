@@ -10,26 +10,26 @@
 
     <script type="text/javascript" charset="utf-8">
 
-        function execute(docId, widgetId, numRecs, userPlatform, recType, uuid, readFromMemCache, writeToMemCache, abTestVarId) {
-            var requestJson = "{\"docId\":" + docId + ",\"recType\":\"" + recType + "\"," +
-                        "\"widgetId\":" + widgetId + ",\"userPlatform\":\"" + userPlatform + "\"," +
-                        "\"numRequiredOrganicRecs\":" + numRecs + "," +
-                        "\"uuid\":\"" + uuid + "\"," +
-                        "\"shouldReadFromMemCache\":\"" + readFromMemCache + "\"," +
-                        "\"shouldWriteToMemCache\":\"" + writeToMemCache + "\"," +
-                        "\"abTestVarId\":\"" + abTestVarId + "\"}";
-                var url = '/ORex/diagnostics/getRecs?request=' + requestJson;
-                var request = $('#request');
-                request.empty();
-                request.text(url);
-                request.wrapInner('<a href="' + encodeURI(url) + '">');
-                $('#request-panel').show();
-                $.getJSON(url, function(data) {
-                    var response = $('#response');
-                    response.empty();
-                    response.jsonView(JSON.stringify(data));
-                    $('#response-panel').show();
-                });
+        function execute(salariesFile, teachersFile, receiptTo, teachersToIterate, sendMails, sendFromNaim) {
+//            var requestJson = "{\"docId\":" + docId + ",\"recType\":\"" + recType + "\"," +
+//                        "\"widgetId\":" + widgetId + ",\"userPlatform\":\"" + userPlatform + "\"," +
+//                        "\"numRequiredOrganicRecs\":" + numRecs + "," +
+//                        "\"uuid\":\"" + uuid + "\"," +
+//                        "\"shouldReadFromMemCache\":\"" + readFromMemCache + "\"," +
+//                        "\"shouldWriteToMemCache\":\"" + writeToMemCache + "\"," +
+//                        "\"abTestVarId\":\"" + abTestVarId + "\"}";
+//                var url = '/ORex/diagnostics/getRecs?request=' + requestJson;
+//                var request = $('#request');
+//                request.empty();
+//                request.text(url);
+//                request.wrapInner('<a href="' + encodeURI(url) + '">');
+//                $('#request-panel').show();
+//                $.getJSON(url, function(data) {
+//                    var response = $('#response');
+//                    response.empty();
+//                    response.jsonView(JSON.stringify(data));
+//                    $('#response-panel').show();
+//                });
         }
     </script>
 </head>
@@ -43,32 +43,28 @@
 
 <div>
 
-    <div>
-        <span class="input-group col-lg-1" style="float: left ;margin: 10px;">
-            <input id="salariesFile" type="file" style="display:none;" />
-            <input class="btn-basic" type="button" value="Select Salaries File" onclick="$.getElementById('salariesFile').click();" />
-        </span>
+    <span class="input-group col-lg-1" style="float: left ;margin: 10px;">
+        <label for="salariesFile">Select Salaries File</label>
+        <input id="salariesFile" type="file"/>
+    </span>
 
-        <span class="input-group col-lg-2" style="float: left ;margin: 10px;">
-            <input id="teachersFile" type="file" style="display:none;" />
-            <input class="btn-basic" type="button" value="Select teachers File" onclick="$.getElementById('teachersFile').click();" />
-        </span>
-    </div>
+    <span class="input-group col-lg-2" style="float: left ;margin: 10px;">
+        <label for="teachersFile">Select Teachers File</label>
+        <input id="teachersFile" type="file"/>
+    </span>
 
-    <div>
-        <span class="input-group col-lg-2" style="float: left ;margin: 10px;">
-            <span class="input-group-addon">Receipt To</span>
-            <input id="receiptTo" class="form-control" type="text" value="נורמל מחקר"/>
-        </span>
+    <span class="input-group col-lg-2" style="float: left ;margin: 10px;">
+        <span class="input-group-addon">Receipt To</span>
+        <input id="receiptTo" class="form-control" type="text" value="נורמל מחקר"/>
+    </span>
 
-        <span class="input-group col-lg-2" style="float: left ;margin: 10px;">
-            <span class="input-group-addon">Which Teachers</span>
-            <select id="teachersToIterate" class="form-control">
-                <option value="ONE" selected="selected">One</option>
-                <option value="ALL">All</option>
-            </select>
-        </span>
-    </div>
+    <span class="input-group col-lg-2" style="float: left ;margin: 10px;">
+        <span class="input-group-addon">Which Teachers</span>
+        <select id="teachersToIterate" class="form-control">
+            <option value="ONE" selected="selected">One</option>
+            <option value="ALL">All</option>
+        </select>
+    </span>
 
     <div class="btn-group" data-toggle="buttons" style="float: left ;margin: 10px;">
         <label class="checkbox">
