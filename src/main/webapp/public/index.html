@@ -11,25 +11,30 @@
     <script type="text/javascript" charset="utf-8">
 
         function execute(salariesFile, teachersFile, receiptTo, teachersToIterate, sendMails, sendFromNaim) {
-//            var requestJson = "{\"docId\":" + docId + ",\"recType\":\"" + recType + "\"," +
-//                        "\"widgetId\":" + widgetId + ",\"userPlatform\":\"" + userPlatform + "\"," +
-//                        "\"numRequiredOrganicRecs\":" + numRecs + "," +
-//                        "\"uuid\":\"" + uuid + "\"," +
-//                        "\"shouldReadFromMemCache\":\"" + readFromMemCache + "\"," +
-//                        "\"shouldWriteToMemCache\":\"" + writeToMemCache + "\"," +
-//                        "\"abTestVarId\":\"" + abTestVarId + "\"}";
-//                var url = '/ORex/diagnostics/getRecs?request=' + requestJson;
-//                var request = $('#request');
-//                request.empty();
-//                request.text(url);
-//                request.wrapInner('<a href="' + encodeURI(url) + '">');
-//                $('#request-panel').show();
-//                $.getJSON(url, function(data) {
-//                    var response = $('#response');
-//                    response.empty();
-//                    response.jsonView(JSON.stringify(data));
-//                    $('#response-panel').show();
-//                });
+
+           var queryParams = "salariesFilePath=" + salariesFile;
+           queryParams += "&teacherFilePath=" + teachersFile;
+           queryParams += "&sendMails=" + sendMails;
+           queryParams += "&sendFromNaim=" + sendFromNaim;
+           queryParams += "&teachersToIterate=" + teachersToIterate;
+           queryParams += "&receiptTo=" + receiptTo;
+           var url = '/salary?' + queryParams;
+            $.getJSON(url, function(data) {
+                var report = data["report"];
+                if (report) {
+                    var reportView = $('#reportView');
+                    reportView.empty();
+                    reportView.append(report);
+                    $('#report-panel').show();
+                }
+                var preview = data["salariesPreview"];
+                if (preview) {
+                    var previewView = $('#previewView');
+                    previewView.empty();
+                    previewView.append(preview);
+                    $('#preview-panel').show();
+                }
+            });
         }
     </script>
 </head>
@@ -99,16 +104,15 @@
 
 <div style="clear:both;"></div>
 
-<div class="panel panel-default" id="request-panel" style="display: none;">
-    <div class="panel-heading">Request</div>
-    <div class="panel-body" id="request">
-    </div>
+
+<div class="panel panel-primary" id="report-panel" style="display: none;">
+    <div class="panel-heading">Run Report</div>
+    <div class="panel-body" id="reportView"></div>
 </div>
 
-<div class="panel panel-default" id="response-panel" style="display: none;">
-    <div class="panel-heading">Response</div>
-    <div class="panel-body" id="response">
-    </div>
+<div class="panel panel-primary" id="preview-panel" style="display: none;">
+    <div class="panel-heading">Preview</div>
+    <div class="panel-body" id="previewView"></div>
 </div>
 
 </body>
