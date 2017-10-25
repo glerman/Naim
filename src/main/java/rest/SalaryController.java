@@ -20,7 +20,6 @@ public class SalaryController {
             String.format(template, name));
   }
 
-  //todo: can't get full file path from browser (maybe use simple text box)
   //todo: add error controller
   //todo: support extra file with optional message per teacher
   @RequestMapping("/salary")

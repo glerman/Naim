@@ -22,20 +22,20 @@
                 var report = data["report"];
                 if (report) {
                     var reportView = $('#reportView');
-                    displayResponse(report, reportView);
+                    displayResponse(report, reportView, "left");
                 }
                 var preview = data["salariesPreview"];
                 if (preview) {
                     var previewView = $('#previewView');
-                    displayResponse(preview, previewView);
+                    displayResponse(preview, previewView, "right");
                 }
             });
         }
 
-        function displayResponse(response, panelBody) {
+        function displayResponse(response, panelBody, textAlignment) {
             response = convertNewLine(response);
             panelBody.empty();
-            panelBody.append("<p>" + response + "</p>");
+            panelBody.append("<p style=\"text-align: " + textAlignment + ";>\"" + response + "</p>");
             panelBody.parent().show();
         }
 
@@ -54,19 +54,19 @@
 
 <div>
 
-    <span class="input-group col-lg-1" style="float: left ;margin: 10px;">
-        <label for="salariesFile">Select Salaries File</label>
-        <input id="salariesFile" type="file"/>
+    <span class="input-group col-lg-2" style="float: left ;margin: 10px;">
+        <span class="input-group-addon">Salaries File Path</span>
+        <input id="salariesFile" class="form-control" type="text"/>
     </span>
 
     <span class="input-group col-lg-2" style="float: left ;margin: 10px;">
-        <label for="teachersFile">Select Teachers File</label>
-        <input id="teachersFile" type="file"/>
+        <span class="input-group-addon">Teachers File Path</span>
+        <input id="teachersFile" class="form-control" type="text"/>
     </span>
 
     <span class="input-group col-lg-2" style="float: left ;margin: 10px;">
         <span class="input-group-addon">Receipt To</span>
-        <input id="receiptTo" class="form-control" type="text" value="נורמל מחקר"/>
+        <input id="receiptTo" class="form-control" type="text" value="נורמל מחקר" style="text-align: right;"/>
     </span>
 
     <span class="input-group col-lg-2" style="float: left ;margin: 10px;">
