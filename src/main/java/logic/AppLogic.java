@@ -40,7 +40,7 @@ public class AppLogic {
       teacherRegistry.registerAll(parsedTeachers.data);
       SalariesLogic salariesLogic = new SalariesLogic(parsedSalaries.data);
       Map<String, TeacherOutput> teacherOutputs = salariesLogic.createTeacherOutputs();
-      ReportAggregator.instance.teacherOutputs(teacherOutputs);
+      ReportAggregator.instance.emailsToSend(teacherOutputs, teachersToIterate);
 
       Optional<Sender> sender;
       try {
@@ -75,11 +75,12 @@ public class AppLogic {
         sender.get().sendMail(
                 teacher.getEmail(),
                 formattedTeacherOutput);
-        Thread.sleep(500);
+        Thread.sleep(500); //todo: is this needed?
       } catch (Exception e) {
         ReportAggregator.instance.sendMailFailure("Failed to send teacher mail", teacher, formattedTeacherOutput.subject(), e);
       }
     }
+    ReportAggregator.instance.incSendEmailSuccess();
     appendToPreview(teacher, formattedTeacherOutput);
   }
 

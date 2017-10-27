@@ -8,6 +8,7 @@ import java.io.IOException;
 /**
  * Created by glerman on 24/9/17.
  */
+//todo: add proper logging instead of sout
 public class App {
 
   public static void main(String[] args) throws IOException, MessagingException {

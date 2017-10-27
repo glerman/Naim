@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import domain.Teacher;
 import domain.TeacherOutput;
+import logic.AppLogic;
 import report.pojo.GeneralProblem;
 import report.pojo.DomainObjectParsingProblem;
 
@@ -20,6 +21,7 @@ public class ReportAggregator {
   Set<DomainObjectParsingProblem> teacherParsingErrors;
   private int numMailsToSend;
   private int sentMailAttempt;
+  private int sendMailSuccess;
   private List<String> appInput;
   private List<String> userInputErrors;
   private Set<GeneralProblem> sendMailProblems;
@@ -36,6 +38,7 @@ public class ReportAggregator {
     this.printFullStackTrace = debug;
     numMailsToSend = 0;
     sentMailAttempt = 0;
+    sendMailSuccess = 0;
     appInput = Lists.newArrayList();
     teachersWithoutEmail = Sets.newHashSet();
     salaryParsingErrors = Sets.newHashSet();
@@ -61,6 +64,7 @@ public class ReportAggregator {
     reportProblemsCollection(salaryParsingErrors, "Salary parsing errors: ", "The salary parsing errors were: ", report);
     reportProblemsCollection(teacherParsingErrors, "Teacher parsing errors: ", "The teacher parsing errors were: ", report);
     reportNumber(numMailsToSend, "Total mails to send: ", report);
+    reportNumber(sendMailSuccess, "Mails sent successfully: ", report);
     reportProblemsCollection(teachersWithoutEmail, "Number of teachers without emails (send wasn't attempted): ", "The teachers without emails are: ", report);
     reportNumber(sentMailAttempt, "Send mail attempts: ", report);
     reportProblemsCollection(sendMailProblems, "Send mail failures: ", "Problems with sending mails were: ", report);
@@ -95,8 +99,18 @@ public class ReportAggregator {
     }
     report.append("\n");
   }
-  public void teacherOutputs(Map<String, TeacherOutput> teacherOutputs) {
-    numMailsToSend = teacherOutputs.size();
+
+  public void emailsToSend(Map<String, TeacherOutput> teacherOutputs, AppLogic.TeachersToIterate teachersToIterate) {
+    switch (teachersToIterate) {
+      case ONE:
+        numMailsToSend = 1;
+        break;
+      case ALL:
+        numMailsToSend = teacherOutputs.size();
+        break;
+      default:
+        throw new IllegalArgumentException("Argument value not accounted for: " + teachersToIterate);
+    }
   }
 
   public void incSendMailAttempt() {
@@ -136,5 +150,9 @@ public class ReportAggregator {
 
   public void formattingError(String teacherName, Exception e) {
     formattingErrors.add(GeneralProblem.create(teacherName, e));
+  }
+
+  public void incSendEmailSuccess() {
+    sendMailSuccess++;
   }
 }
