@@ -11,6 +11,7 @@
 
         function execute(salariesFile, teachersFile, receiptTo, teachersToIterate, sendMails, sendFromNaim) {
 
+           hideOutputPanels();
            var queryParams = "salariesFilePath=" + salariesFile;
            queryParams += "&teacherFilePath=" + teachersFile;
            queryParams += "&sendMails=" + sendMails;
@@ -21,20 +22,29 @@
             $.getJSON(url, function(data) {
                 var report = data["report"];
                 if (report) {
-                    var reportView = $('#reportView');
+                    var reportView = $('#reportBody');
                     displayResponse(report, reportView, "left");
                 }
                 var preview = data["salariesPreview"];
                 if (preview) {
-                    var previewView = $('#previewView');
+                    var previewView = $('#previewBody');
                     displayResponse(preview, previewView, "right");
                 }
             });
         }
 
+        function hideOutputPanels() {
+            var previewBody = $('#previewBody');
+            previewBody.empty();
+            previewBody.parent().hide();
+
+            var reportBody = $('#report-panel');
+            reportBody.empty();
+            reportBody.parent().hide();
+        }
+
         function displayResponse(response, panelBody, textAlignment) {
             response = convertNewLine(response);
-            panelBody.empty();
             panelBody.append("<p style=\"text-align: " + textAlignment + ";>\"" + response + "</p>");
             panelBody.parent().show();
         }
