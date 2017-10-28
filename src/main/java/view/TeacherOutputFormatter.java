@@ -13,7 +13,6 @@ public class TeacherOutputFormatter {
 
   private static DateTimeFormatter inputDtf = DateTimeFormat.forPattern("dd/MM/yyyy");
   private static DateTimeFormatter outputDtf = DateTimeFormat.forPattern("MM/yyyy");
-  private static final String[] OUTPUT_COLUMNS = {"תעריף","משתתפים","תאריך","אולם","כיתה"};
 
   private final HtmlTableFormatter tableFormatter;
 
@@ -33,7 +32,14 @@ public class TeacherOutputFormatter {
   }
 
   public FormattedOutput_2 formatTeacherOutput_2(String teacherName, TeacherOutput teacherOutput, String reciptTo) {
-    throw new RuntimeException();
+    String outputDate = extractDate(teacherOutput);
+    return FormattedOutput_2.create(
+            formatSubjectLine(teacherName, outputDate),
+            formatMailHeader(reciptTo, outputDate),
+            formatSalaryTables(teacherOutput),
+            formatMailFooter(teacherOutput),
+            tableFormatter.toEntireHtml(teacherOutput.classNameToSalariesInfo.values(), formatMailHeader(reciptTo, outputDate), formatMailFooter(teacherOutput))
+    );
   }
 
   private String formatMailHeader(String receiptTo, String outputDate) {
@@ -69,7 +75,7 @@ public class TeacherOutputFormatter {
   }
 
   private String formatSalaryTables(TeacherOutput teacherOutput) {
-    return tableFormatter.toHtml(teacherOutput.classNameToSalariesInfo.values(), OUTPUT_COLUMNS);
+    return tableFormatter.toHtml(teacherOutput.classNameToSalariesInfo.values());
   }
 
   private String formatSubjectLine(String teacherName, String outputDate) {
