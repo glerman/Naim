@@ -56,10 +56,10 @@ public class TeacherOutputFormatter {
     List<String> sentences = Lists.newArrayList();
     sentences.add(("היי"));
     sentences.add("להלן פירוט תשלומים עבור חודש " + outputDate);
-    sentences.add(("נא לרשום על הקבלה / חשבונית עבור " + '"' + receiptTo + "\" " + "על הסכום הנ״ל"));
+    sentences.add(("נא לרשום על הקבלה / חשבונית עבור " + '"' + receiptTo + "\" " + "על הסכום הנ\"ל"));
     sentences.add(("(בתוספת מע\"מ במידה וצריך)."));
     sentences.add("");
-    sentences.add("דו״ח שיעורים");
+    sentences.add("דו\"ח שיעורים");
     return SentenceContainer.create(sentences);
   }
 
@@ -72,7 +72,7 @@ public class TeacherOutputFormatter {
 
   public SentenceContainer formatMailFooter(int totalPayment) {
     List<String> sentences = Lists.newArrayList();
-    sentences.add("סה\"כ בגין שיעורים: " + totalPayment + " ש״ח");
+    sentences.add("סה\"כ בגין שיעורים: " + totalPayment + " ש\"ח");
     sentences.add("תודה");
     sentences.add("");
     sentences.add("לנה");
