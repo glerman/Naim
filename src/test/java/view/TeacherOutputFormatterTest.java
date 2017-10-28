@@ -22,9 +22,9 @@ public class TeacherOutputFormatterTest {
 
     Assert.assertNotNull(formattedOutput);
     Assert.assertFalse(StringUtils.isEmpty(formattedOutput.subject()));
-    Assert.assertFalse(StringUtils.isEmpty(formattedOutput.header()));
+    Assert.assertFalse(formattedOutput.header().sentences().isEmpty());
     Assert.assertFalse(StringUtils.isEmpty(formattedOutput.salaryTablesHtml()));
-    Assert.assertFalse(StringUtils.isEmpty(formattedOutput.footer()));
+    Assert.assertFalse(formattedOutput.footer().sentences().isEmpty());
     Assert.assertFalse(StringUtils.isEmpty(formattedOutput.entireHtml()));
 
     System.out.println(formattedOutput);
