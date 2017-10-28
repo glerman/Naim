@@ -9,7 +9,6 @@ import org.apache.commons.lang.StringUtils;
 import parse.CsvParser;
 import parse.CsvResult;
 import report.ReportAggregator;
-import view.FormattedOutput;
 import view.FormattedOutput_2;
 import view.TeacherOutputFormatter;
 
@@ -27,6 +26,7 @@ public class AppLogic {
   private final StringBuilder previewBuilder = new StringBuilder();
 
 
+  //todo: if iterating over just 1 teacher randomise selection
   public String start(String salariesFilePath, String teacherFilePath, String charset, boolean sendMails, boolean sendFromNaim,
                       TeachersToIterate teachersToIterate, String receiptTo) {
 
@@ -41,7 +41,7 @@ public class AppLogic {
       teacherRegistry.registerAll(parsedTeachers.data);
       SalariesLogic salariesLogic = new SalariesLogic(parsedSalaries.data);
       Map<String, TeacherOutput> teacherOutputs = salariesLogic.createTeacherOutputs();
-      ReportAggregator.instance.emailsToSend(teacherOutputs, teachersToIterate);
+      ReportAggregator.instance.emailsToSend(teacherOutputs, teachersToIterate, sendMails);
 
       Optional<Sender> sender;
       try {
@@ -80,17 +80,16 @@ public class AppLogic {
       } catch (Exception e) {
         ReportAggregator.instance.sendMailFailure("Failed to send teacher mail", teacher, formattedTeacherOutput.subject(), e);
       }
+      ReportAggregator.instance.incSendEmailSuccess();
     }
-    ReportAggregator.instance.incSendEmailSuccess();
     appendToPreview(teacher, formattedTeacherOutput);
   }
 
+  //todo: change to a list of objects, each object holds address, subject and entire html. when getting the response we'll align the address and subject to the right (inline) and the entire html will align itself
   private void appendToPreview(Teacher teacher, FormattedOutput_2 formattedTeacherOutput) {
-    previewBuilder.append(teacher.getEmail()).append("\n");
-    previewBuilder.append(formattedTeacherOutput.subject()).append("\n");
-    previewBuilder.append(formattedTeacherOutput.entireHtml()).append("\n");
-//    previewBuilder.append(formattedTeacherOutput.salaryTablesHtml()).append("\n");
-//    previewBuilder.append(formattedTeacherOutput.footer()).append("\n");
+//    previewBuilder.append(teacher.getEmail()).append("\n"); //todo: first email isn't shown (html issue)
+//    previewBuilder.append(formattedTeacherOutput.subject()).append("\n");
+    previewBuilder.append(formattedTeacherOutput.entireHtml());
     previewBuilder.append("\n\n\n");
   }
 

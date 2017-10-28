@@ -100,7 +100,11 @@ public class ReportAggregator {
     report.append("\n");
   }
 
-  public void emailsToSend(Map<String, TeacherOutput> teacherOutputs, AppLogic.TeachersToIterate teachersToIterate) {
+  public void emailsToSend(Map<String, TeacherOutput> teacherOutputs, AppLogic.TeachersToIterate teachersToIterate, boolean sendMails) {
+    if (!sendMails) {
+      numMailsToSend = 0;
+      return;
+    }
     switch (teachersToIterate) {
       case ONE:
         numMailsToSend = 1;
