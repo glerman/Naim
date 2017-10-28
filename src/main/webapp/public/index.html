@@ -22,13 +22,13 @@
             $.getJSON(url, function(data) {
                 var report = data["report"];
                 if (report) {
-                    var reportView = $('#reportBody');
-                    displayResponse(report, reportView, "left");
+                    var reportBody = $('#reportBody');
+                    displayResponse(report, reportBody);
                 }
                 var preview = data["salariesPreview"];
                 if (preview) {
-                    var previewView = $('#previewBody');
-                    displayResponse(preview, previewView, "right");
+                    var previewBody = $('#previewBody');
+                    displayResponse(preview, previewBody);
                 }
             });
         }
@@ -38,14 +38,14 @@
             previewBody.empty();
             previewBody.parent().hide();
 
-            var reportBody = $('#report-panel');
+            var reportBody = $('#reportBody');
             reportBody.empty();
             reportBody.parent().hide();
         }
 
-        function displayResponse(response, panelBody, textAlignment) {
+        function displayResponse(response, panelBody) {
             response = convertNewLine(response);
-            panelBody.append("<p style=\"text-align: " + textAlignment + ";>\"" + response + "</p>");
+            panelBody.append("<p" + response + "</p>");
             panelBody.parent().show();
         }
 
@@ -123,12 +123,12 @@
 
 <div class="panel panel-primary" id="report-panel" style="display: none;">
     <div class="panel-heading">Run Report</div>
-    <div class="panel-body" id="reportView"></div>
+    <div class="panel-body" id="reportBody"></div>
 </div>
 
 <div class="panel panel-primary" id="preview-panel" style="display: none;">
-    <div class="panel-heading">Preview (approximated final email view)</div>
-    <div class="panel-body" id="previewView"></div>
+    <div class="panel-heading">Email Body Preview</div>
+    <div class="panel-body" id="previewBody"></div>
 </div>
 
 </body>
