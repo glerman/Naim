@@ -3,14 +3,12 @@ package mail;
 import com.google.api.client.util.Base64;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
-import view.FormattedOutput;
+import view.FormattedOutput_2;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -34,7 +32,7 @@ public class Sender {
 
 
   public Message sendMail(String to,
-                          FormattedOutput formattedTeacherOutput) throws MessagingException, IOException {
+                          FormattedOutput_2 formattedTeacherOutput) throws MessagingException, IOException {
 
     MimeMessage email = createEmail(to, fromEmail, formattedTeacherOutput);
     return sendMessage(gmail, "me", email);
@@ -45,36 +43,37 @@ public class Sender {
    *
    * @param to email address of the receiver
    * @param from email address of the sender, the mailbox account
+   * @param formattedTeacherOutput
    * @return the MimeMessage to be used to send email
    * @throws MessagingException
    */
   private static MimeMessage createEmail(String to,
                                          String from,
-                                         FormattedOutput formattedTeacherOutput) throws MessagingException {
+                                         FormattedOutput_2 formattedTeacherOutput) throws MessagingException {
     Properties props = new Properties();
     Session session = Session.getDefaultInstance(props, null);
 
     MimeMessage email = new MimeMessage(session);
-
-    MimeMultipart multipart = new MimeMultipart();
-
-    MimeBodyPart headerBodyPart = new MimeBodyPart();
-    MimeBodyPart salaryTablesHtmlPart = new MimeBodyPart();
-    MimeBodyPart footerPart = new MimeBodyPart();
-
-    headerBodyPart.setText(formattedTeacherOutput.header());
-    salaryTablesHtmlPart.setContent(formattedTeacherOutput.salaryTablesHtml(), "text/html");
-    footerPart.setText(formattedTeacherOutput.footer());
-
-    multipart.addBodyPart(headerBodyPart);
-    multipart.addBodyPart(salaryTablesHtmlPart);
-    multipart.addBodyPart(footerPart);
+//
+//    MimeMultipart multipart = new MimeMultipart();
+//
+//    MimeBodyPart headerBodyPart = new MimeBodyPart();
+//    MimeBodyPart salaryTablesHtmlPart = new MimeBodyPart();
+//    MimeBodyPart footerPart = new MimeBodyPart();
+//
+//    headerBodyPart.setText(formattedTeacherOutput.header());
+//    salaryTablesHtmlPart.setContent(formattedTeacherOutput.salaryTablesHtml(), "text/html");
+//    footerPart.setText(formattedTeacherOutput.footer());
+//
+//    multipart.addBodyPart(headerBodyPart);
+//    multipart.addBodyPart(salaryTablesHtmlPart);
+//    multipart.addBodyPart(footerPart);
 
     email.setFrom(new InternetAddress(from));
     email.addRecipient(javax.mail.Message.RecipientType.TO,
             new InternetAddress(to));
     email.setSubject(formattedTeacherOutput.subject());
-    email.setContent(multipart);
+    email.setContent(formattedTeacherOutput.entireHtml(), "text/html");
     return email;
   }
 

@@ -32,6 +32,10 @@ public class TeacherOutputFormatter {
     );
   }
 
+  public FormattedOutput_2 formatTeacherOutput_2(String teacherName, TeacherOutput teacherOutput, String reciptTo) {
+    throw new RuntimeException();
+  }
+
   private String formatMailHeader(String receiptTo, String outputDate) {
 
     StringBuilder sb = new StringBuilder();

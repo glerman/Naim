@@ -10,6 +10,7 @@ import parse.CsvParser;
 import parse.CsvResult;
 import report.ReportAggregator;
 import view.FormattedOutput;
+import view.FormattedOutput_2;
 import view.TeacherOutputFormatter;
 
 import java.io.IOException;
@@ -68,7 +69,7 @@ public class AppLogic {
       ReportAggregator.instance.addTeacherWithoutEmail(teacherName);
       return;
     }
-    FormattedOutput formattedTeacherOutput = formatter.formatTeacherOutput(teacherName, teacherOutput, receiptTo);
+    FormattedOutput_2 formattedTeacherOutput = formatter.formatTeacherOutput_2(teacherName, teacherOutput, receiptTo);
     if (sender.isPresent()) {
       try {
         ReportAggregator.instance.incSendMailAttempt();
@@ -84,12 +85,12 @@ public class AppLogic {
     appendToPreview(teacher, formattedTeacherOutput);
   }
 
-  private void appendToPreview(Teacher teacher, FormattedOutput formattedTeacherOutput) {
+  private void appendToPreview(Teacher teacher, FormattedOutput_2 formattedTeacherOutput) {
     previewBuilder.append(teacher.getEmail()).append("\n");
     previewBuilder.append(formattedTeacherOutput.subject()).append("\n");
-    previewBuilder.append(formattedTeacherOutput.header()).append("\n");
-    previewBuilder.append(formattedTeacherOutput.salaryTablesHtml()).append("\n");
-    previewBuilder.append(formattedTeacherOutput.footer()).append("\n");
+    previewBuilder.append(formattedTeacherOutput.entireHtml()).append("\n");
+//    previewBuilder.append(formattedTeacherOutput.salaryTablesHtml()).append("\n");
+//    previewBuilder.append(formattedTeacherOutput.footer()).append("\n");
     previewBuilder.append("\n\n\n");
   }
 
