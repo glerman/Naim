@@ -26,7 +26,6 @@ public class AppLogic {
   private final StringBuilder previewBuilder = new StringBuilder();
 
 
-  //todo: if iterating over just 1 teacher randomise selection
   public String start(String salariesFilePath, String teacherFilePath, String charset, boolean sendMails, boolean sendFromNaim,
                       TeachersToIterate teachersToIterate, String receiptTo) {
 
