@@ -1,6 +1,7 @@
 package file;
 
 import com.google.common.io.Files;
+import org.apache.commons.lang.StringUtils;
 import report.ReportAggregator;
 
 import java.io.File;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FileReader {
 
@@ -22,12 +24,29 @@ public class FileReader {
       return Optional.empty();
     }
 
+    List<String> lines = read(charset, file);
+    if (lines == null) {
+      return Optional.empty();
+    } else {
+      lines = lines.
+              stream().
+              filter(StringUtils::isNotEmpty).
+              collect(Collectors.toList());
+      return Optional.of(lines);
+    }
+  }
+
+  private List<String> read(String charset, File file) {
     try {
       List<String> lines = Files.readLines(file, Charset.forName(charset));
-      return Optional.of(lines);
+      if (lines == null) {
+        ReportAggregator.instance.ioError("File reading returned null: " + file.getPath(), new RuntimeException());
+        return null;
+      }
+      return lines;
     } catch (IOException e) {
-      ReportAggregator.instance.ioError("Failed reading file: " + path, e);
-      return Optional.empty();
+      ReportAggregator.instance.ioError("Failed reading file: " + file.getPath(), e);
+      return null;
     }
   }
 }
