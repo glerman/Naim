@@ -45,6 +45,19 @@ public class CsvParserTest {
     doTest(result);
   }
 
+
+  @Test
+  public void testMessages() throws Exception {
+
+    List<String> teacherLines = InputReaderHelper.readLines(InputReaderHelper.teacherMessagesFilePath);
+    CsvResult result = csvParser.parse(teacherLines);
+
+    Assert.assertEquals(2, result.header.length);
+    Assert.assertEquals(8, result.data.length);
+
+    doTest(result);
+  }
+
   private void doTest(CsvResult result) {
     for (int i = 0; i < result.data.length; i++) {
       Assert.assertNotNull("Data row is null at row #" + i, result.data[i]);
