@@ -1,5 +1,6 @@
 package logic;
 
+import domain.MessageRegistry;
 import domain.Teacher;
 import domain.TeacherOutput;
 import domain.TeacherRegistry;
@@ -26,36 +27,47 @@ public class AppLogic {
   private final StringBuilder previewBuilder = new StringBuilder();
 
 
-  public String start(String salariesFilePath, String teacherFilePath, String charset, boolean sendMails, boolean sendFromNaim,
-                      TeachersToIterate teachersToIterate, String receiptTo) {
+  public String start(String salariesFilePath, String teacherFilePath, String messagesFilePath,
+                      String charset, boolean sendMails, boolean sendFromNaim, TeachersToIterate teachersToIterate,
+                      String receiptTo) {
 
     if (!validInput(salariesFilePath, teacherFilePath, charset, receiptTo)) {
+      //reason already logged
       return "";
     }
     Optional<List<String>> salaryLines = fileReader.read(salariesFilePath, charset);
     Optional<List<String>> teacherLines = fileReader.read(teacherFilePath, charset);
-    if (salaryLines.isPresent() && teacherLines.isPresent()) {
-      CsvResult parsedSalaries = csvParser.parse(salaryLines.get());
-      CsvResult parsedTeachers = csvParser.parse(teacherLines.get());
-      teacherRegistry.registerAll(parsedTeachers.data);
-      SalariesLogic salariesLogic = new SalariesLogic(parsedSalaries.data);
-      Map<String, TeacherOutput> teacherOutputs = salariesLogic.createTeacherOutputs();
-      ReportAggregator.instance.emailsToSend(teacherOutputs, teachersToIterate, sendMails);
+    Optional<List<String>> messageLines = StringUtils.isEmpty(messagesFilePath) ?
+            Optional.empty() :
+            fileReader.read(messagesFilePath, charset);
+    if (!salaryLines.isPresent() || !teacherLines.isPresent()) {
+      //reason already logged
+      return "";
+    }
+    CsvResult parsedSalaries = salaryLines.map(csvParser::parse).get();
+    CsvResult parsedTeachers = teacherLines.map(csvParser::parse).get();
+    Optional<MessageRegistry> messageRegistry = messageLines.
+            map(csvParser::parse).
+            map(MessageRegistry::new);
+    teacherRegistry.registerTeachers(parsedTeachers.data);
+    messageRegistry.ifPresent(teacherRegistry::registerMessages);
+    SalariesLogic salariesLogic = new SalariesLogic(parsedSalaries.data);
+    Map<String, TeacherOutput> teacherOutputs = salariesLogic.createTeacherOutputs();
+    ReportAggregator.instance.emailsToSend(teacherOutputs, teachersToIterate, sendMails);
 
-      Optional<Sender> sender;
-      try {
-        sender = sendMails ?
-                Optional.of(new Sender(sendFromNaim)) :
-                Optional.empty();
-      } catch (IOException e) {
-        ReportAggregator.instance.ioError("Failed to create mail service instance", e);
-        return "";
-      }
-      for (Map.Entry<String, TeacherOutput> teacherToOutput : teacherOutputs.entrySet()) {
-        formatAndSendTeacher(teacherToOutput.getKey(), teacherToOutput.getValue(), sender, receiptTo);
-        if (teachersToIterate.equals(TeachersToIterate.ONE)) {
-          break;
-        }
+    Optional<Sender> sender;
+    try {
+      sender = sendMails ?
+              Optional.of(new Sender(sendFromNaim)) :
+              Optional.empty();
+    } catch (IOException e) {
+      ReportAggregator.instance.ioError("Failed to create mail service instance", e);
+      return "";
+    }
+    for (Map.Entry<String, TeacherOutput> teacherToOutput : teacherOutputs.entrySet()) {
+      formatAndSendTeacher(teacherToOutput.getKey(), teacherToOutput.getValue(), sender, receiptTo);
+      if (teachersToIterate.equals(TeachersToIterate.ONE)) {
+        break;
       }
     }
     return previewBuilder.toString();

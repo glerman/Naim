@@ -36,7 +36,8 @@ public class SalaryController {
     String salariesPreview = null;
     try {
       AppLogic appLogic = new AppLogic();
-      salariesPreview = appLogic.start(salariesFilePath, teacherFilePath, charset, sendMails, sendFromNaim, teachersToIterate, receiptTo);
+      String messagesPath = "/Users/glerman/dev/naim/src/test/resources/teacherMessages.csv";
+      salariesPreview = appLogic.start(salariesFilePath, teacherFilePath, messagesPath, charset, sendMails, sendFromNaim, teachersToIterate, receiptTo);
     } catch (Throwable t) {
       ReportAggregator.instance.unexpectedError(t);
     }

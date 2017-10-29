@@ -15,7 +15,8 @@ public class AppTest {
             sendMails,
             sendFromNaim,
             AppLogic.TeachersToIterate.ONE.toString(),
-            "הגברת שושנה"
+            "הגברת שושנה",
+            InputReaderHelper.teacherMessagesFilePath
     };
     App.main(args);
   }
