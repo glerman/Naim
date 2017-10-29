@@ -1,6 +1,7 @@
 package domain;
 
 import parse.TeacherParser;
+import report.ReportAggregator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,10 +17,15 @@ public class TeacherRegistry {
   }
 
   private void register(final Object[] teacherRow) {
-    parser.parse(teacherRow).ifPresent(teacher -> registry.put(teacher.getName(), teacher));
+    parser.parse(teacherRow).ifPresent(teacher -> {
+      Teacher prevTeacher = registry.put(teacher.getName(), teacher);
+      if (prevTeacher != null) {
+        ReportAggregator.instance.userInputError("Teacher " + teacher.getName() + " appears more than once in the teachers input");
+      }
+    });
   }
 
-  public void registerAll(final Object[][] teacherRows) {
+  public void registerTeachers(final Object[][] teacherRows) {
 
     for (Object[] teacherRow : teacherRows) {
       register(teacherRow);
@@ -30,4 +36,15 @@ public class TeacherRegistry {
     return registry.get(teacherName);
   }
 
+  public void registerMessages(MessageRegistry messageRegistry) {
+
+    messageRegistry.findDummyMessages(this);
+    if (registry.isEmpty()) {
+      throw new IllegalStateException("Teacher registry should be set up");
+    }
+    registry.values().forEach(teacher -> {
+      String messageStr = messageRegistry.getMessage(teacher.getName()).getMessage();
+      teacher.setMessage(messageStr);
+    });
+  }
 }

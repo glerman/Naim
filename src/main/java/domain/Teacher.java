@@ -7,6 +7,7 @@ public class Teacher {
 
   private String name;
   private String email;
+  private String message;
 
   public Teacher(String name, String email) {
     this.name = name;
@@ -32,12 +33,12 @@ public class Teacher {
     this.email = email;
   }
 
-  @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this)
-            .add("name", name)
-            .add("email", email)
-            .toString();
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+  public String getMessage() {
+    return message;
   }
 
   @Override
@@ -46,11 +47,21 @@ public class Teacher {
     if (o == null || getClass() != o.getClass()) return false;
     Teacher teacher = (Teacher) o;
     return Objects.equal(name, teacher.name) &&
-            Objects.equal(email, teacher.email);
+            Objects.equal(email, teacher.email) &&
+            Objects.equal(message, teacher.message);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(name, email);
+    return Objects.hashCode(name, email, message);
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+            .add("name", name)
+            .add("email", email)
+            .add("message", message)
+            .toString();
   }
 }
