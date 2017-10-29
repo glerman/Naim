@@ -27,7 +27,6 @@ import static j2html.TagCreator.table;
 import static j2html.TagCreator.text;
 import static j2html.TagCreator.tr;
 
-//todo: some(!!) " (quotes) in the mail appear as ? (question marks)
 public class HtmlTableFormatter {
 
   private static final String[] OUTPUT_COLUMNS = {"תעריף","משתתפים","תאריך","אולם","כיתה"};
@@ -38,23 +37,6 @@ public class HtmlTableFormatter {
     salaryInfoToOutputRow = new SalaryInfoToOutputRow();
   }
 
-  public String toHtml(Collection<Collection<SalaryInfo>> salariesPerClass) {
-    String html = builtHtml(salariesPerClass, Lists.newArrayList(OUTPUT_COLUMNS));
-    return HtmlUtils.prepareForEmail(html, "th, td");
-  }
-
-  private String builtHtml(Collection<Collection<SalaryInfo>> salariesPerClass, List<String> columnNames) {
-
-    return html(
-              meta().attr(Attr.CHARSET, "UTF-8"),
-              head(style("table, th, td {\n" +
-                              "            border: 1px solid black;\n" +
-                              "            text-align: right;\n" +
-                              "        }")),
-              body(generateClassTables(salariesPerClass, columnNames))
-            ).attr(Attr.LANG, "he").
-      renderFormatted();
-  }
 
   private DomContent generateClassTables(Collection<Collection<SalaryInfo>> salariesPerClass, List<String> columnNames) {
     return each(salariesPerClass, classSalaries -> generateClassTable(classSalaries, columnNames));

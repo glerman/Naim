@@ -34,11 +34,7 @@ public class TeacherOutputFormatter {
 
     return FormattedOutput.create(
             formatSubjectLine(teacherName, outputDate),
-            header,
-            formatSalaryTables(teacherOutput),
-            footer,
-            entireHtml
-    );
+            entireHtml);
   }
 
   public SentenceContainer formatMailHeader(String receiptTo, String outputDate, String teacherMessage) {
@@ -74,10 +70,6 @@ public class TeacherOutputFormatter {
     sentences.add("facebook.com/stnaim");
     sentences.add("facebook.com/gymnaim");
     return SentenceContainer.create(sentences);
-  }
-
-  private String formatSalaryTables(TeacherOutput teacherOutput) {
-    return tableFormatter.toHtml(teacherOutput.classNameToSalariesInfo.values());
   }
 
   private String formatSubjectLine(String teacherName, String outputDate) {

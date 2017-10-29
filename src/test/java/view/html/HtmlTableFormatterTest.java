@@ -25,15 +25,6 @@ public class HtmlTableFormatterTest {
     dataHelper = new TeacherOutputFormatter();
   }
 
-//  @Test
-//  public void test() throws Exception {
-//    Map<String, Collection<SalaryInfo>> classToSalaries = Maps.newHashMap();
-//    ViewTestDataGenerator.salaries.forEach(salary -> classToSalaries.put(salary.getClassName(), Collections.singleton(salary)));
-//    String html = formatter.toHtml(classToSalaries.values());
-//
-//    System.out.println(html);
-//  }
-
 
   @Test
   public void testEntireHtml() throws Exception {
