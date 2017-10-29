@@ -25,6 +25,7 @@ public class SalaryController {
   @RequestMapping("/salary")
   public SalaryResponse salary(@RequestParam(value = "salariesFilePath") String salariesFilePath,
                      @RequestParam(value = "teacherFilePath") String teacherFilePath,
+                     @RequestParam(value = "messagesFilePath") String messagesFilePath,
                      @RequestParam(value = "charset", defaultValue = "UTF-8") String charset,
                      @RequestParam(value = "sendMails") boolean sendMails,
                      @RequestParam(value = "sendFromNaim") boolean sendFromNaim,
@@ -36,8 +37,7 @@ public class SalaryController {
     String salariesPreview = null;
     try {
       AppLogic appLogic = new AppLogic();
-      String messagesPath = "/Users/glerman/dev/naim/src/test/resources/teacherMessages.csv";
-      salariesPreview = appLogic.start(salariesFilePath, teacherFilePath, messagesPath, charset, sendMails, sendFromNaim, teachersToIterate, receiptTo);
+      salariesPreview = appLogic.start(salariesFilePath, teacherFilePath, messagesFilePath, charset, sendMails, sendFromNaim, teachersToIterate, receiptTo);
     } catch (Throwable t) {
       ReportAggregator.instance.unexpectedError(t);
     }

@@ -9,11 +9,12 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <script type="text/javascript" charset="utf-8">
 
-        function execute(salariesFile, teachersFile, receiptTo, teachersToIterate, sendMails, sendFromNaim) {
+        function execute(salariesFile, teachersFile, messagesFile, receiptTo, teachersToIterate, sendMails, sendFromNaim) {
 
            hideOutputPanels();
            var queryParams = "salariesFilePath=" + salariesFile;
            queryParams += "&teacherFilePath=" + teachersFile;
+           queryParams += "&messagesFilePath=" + messagesFile;
            queryParams += "&sendMails=" + sendMails;
            queryParams += "&sendFromNaim=" + sendFromNaim;
            queryParams += "&teachersToIterate=" + teachersToIterate;
@@ -68,22 +69,27 @@
 <div>
 
     <span class="input-group col-lg-2" style="alignment: left ;margin: 10px;">
-        <span class="input-group-addon">Salaries File Path-</span>
+        <span class="input-group-addon">Salaries File Path....</span>
         <input id="salariesFile" class="form-control" type="text" style="width: 700px;"/>
     </span>
 
     <span class="input-group col-lg-2" style="alignment: left ;margin: 10px;">
-        <span class="input-group-addon">Teachers File Path</span>
+        <span class="input-group-addon">Teachers File Path..</span>
         <input id="teachersFile" class="form-control" type="text" style="width: 700px;"/>
     </span>
 
     <span class="input-group col-lg-2" style="alignment: left ;margin: 10px;">
-        <span class="input-group-addon">Receipt To---------</span>
+        <span class="input-group-addon">Messages File Path</span>
+        <input id="messagesFile" class="form-control" type="text" style="width: 700px;"/>
+    </span>
+
+    <span class="input-group col-lg-2" style="alignment: left ;margin: 10px;">
+        <span class="input-group-addon">Receipt To...............</span>
         <input id="receiptTo" class="form-control" type="text" placeholder="קבלה עבור" style="text-align: right;"/>
     </span>
 
     <span class="input-group col-lg-2" style="alignment: left ;margin: 10px;">
-        <span class="input-group-addon">Which Teachers---</span>
+        <span class="input-group-addon">Which Teachers.......</span>
         <select id="teachersToIterate" class="form-control">
             <option value="ONE" selected="selected">One</option>
             <option value="ALL">All</option>
@@ -111,11 +117,12 @@
        onclick="
                   var salariesFile = $('#salariesFile').val();
                   var teachersFile = $('#teachersFile').val();
+                  var messagesFile = $('#messagesFile').val();
                   var receiptTo = $('#receiptTo').val();
                   var teachersToIterate = $('#teachersToIterate').val();
                   var sendMails = document.getElementById('sendMails').checked;
                   var sendFromNaim = document.getElementById('sendFromNaim').checked;
-                  execute(salariesFile, teachersFile, receiptTo, teachersToIterate, sendMails, sendFromNaim);
+                  execute(salariesFile, teachersFile, messagesFile, receiptTo, teachersToIterate, sendMails, sendFromNaim);
     ">
     Execute
     </a>

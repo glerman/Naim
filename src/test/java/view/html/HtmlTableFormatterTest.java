@@ -40,7 +40,7 @@ public class HtmlTableFormatterTest {
     Map<String, Collection<SalaryInfo>> classToSalaries = Maps.newHashMap();
     ViewTestDataGenerator.salaries.forEach(salary -> classToSalaries.put(salary.getClassName(), Collections.singleton(salary)));
 
-    SentenceContainer header = dataHelper.formatMailHeader("שושנה", "08/2017");
+    SentenceContainer header = dataHelper.formatMailHeader("שושנה", "08/2017", "הודעה למורה...");
     SentenceContainer footer = dataHelper.formatMailFooter(1370);
 
     String html = formatter.toEntireHtml(classToSalaries.values(), header, footer);

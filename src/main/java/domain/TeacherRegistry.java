@@ -43,8 +43,10 @@ public class TeacherRegistry {
       throw new IllegalStateException("Teacher registry should be set up");
     }
     registry.values().forEach(teacher -> {
-      String messageStr = messageRegistry.getMessage(teacher.getName()).getMessage();
-      teacher.setMessage(messageStr);
+      Message message = messageRegistry.getMessage(teacher.getName());
+      if (message != null) { //A teacher may not have a personal message, it's ok
+        teacher.setMessage(message.getMessage());
+      }
     });
   }
 }
