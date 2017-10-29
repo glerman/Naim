@@ -10,7 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import parse.CsvParser;
 import parse.CsvResult;
 import report.ReportAggregator;
-import view.FormattedOutput_2;
+import view.FormattedOutput;
 import view.TeacherOutputFormatter;
 
 import java.io.IOException;
@@ -81,7 +81,7 @@ public class AppLogic {
             map(MessageRegistry::new);
     teacherRegistry.registerTeachers(parsedTeachers.data);
     messageRegistry.ifPresent(teacherRegistry::registerMessages);
-    SalariesLogic salariesLogic = new SalariesLogic(parsedSalaries.data);
+    SalariesLogic salariesLogic = new SalariesLogic(parsedSalaries.data, teacherRegistry);
     return Optional.of(salariesLogic.createTeacherOutputs());
   }
 
@@ -92,7 +92,7 @@ public class AppLogic {
       ReportAggregator.instance.addTeacherWithoutEmail(teacherName);
       return;
     }
-    FormattedOutput_2 formattedTeacherOutput = formatter.formatTeacherOutput_2(teacherName, teacherOutput, receiptTo);
+    FormattedOutput formattedTeacherOutput = formatter.formatTeacherOutput(teacherName, teacherOutput, receiptTo);
     if (sender.isPresent()) {
       try {
         ReportAggregator.instance.incSendMailAttempt();
@@ -109,7 +109,7 @@ public class AppLogic {
   }
 
   //todo: change to a list of objects, each object holds address, subject and entire html. when getting the response we'll align the address and subject to the right (inline) and the entire html will align itself
-  private void appendToPreview(Teacher teacher, FormattedOutput_2 formattedTeacherOutput) {
+  private void appendToPreview(Teacher teacher, FormattedOutput formattedTeacherOutput) {
 //    previewBuilder.append(teacher.getEmail()).append("\n"); //todo: first email isn't shown (html issue)
 //    previewBuilder.append(formattedTeacherOutput.subject()).append("\n");
     previewBuilder.append(formattedTeacherOutput.entireHtml());

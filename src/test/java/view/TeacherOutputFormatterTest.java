@@ -17,8 +17,8 @@ public class TeacherOutputFormatterTest {
     TeacherOutputFormatter formatter = new TeacherOutputFormatter();
     Map<String, Collection<SalaryInfo>> map = Collections.singletonMap("class", ViewTestDataGenerator.salaries);
     int sum = map.values().stream().flatMap(Collection::stream).mapToInt(SalaryInfo::getPayment).sum();
-    TeacherOutput teacherOutput = new TeacherOutput(map, sum);
-    FormattedOutput_2 formattedOutput = formatter.formatTeacherOutput_2("teach", teacherOutput, "גברת שושנה");
+    TeacherOutput teacherOutput = new TeacherOutput(map, sum, "teacherMessage");
+    FormattedOutput formattedOutput = formatter.formatTeacherOutput("teach", teacherOutput, "גברת שושנה");
 
     Assert.assertNotNull(formattedOutput);
     Assert.assertFalse(StringUtils.isEmpty(formattedOutput.subject()));

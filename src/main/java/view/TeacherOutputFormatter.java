@@ -25,24 +25,12 @@ public class TeacherOutputFormatter {
 
   public FormattedOutput formatTeacherOutput(String teacherName, TeacherOutput teacherOutput, String reciptTo) {
 
-//    String outputDate = extractDate(teacherOutput);
-//    return FormattedOutput.create(
-//            formatSubjectLine(teacherName, outputDate),
-//            formatMailHeader(reciptTo, outputDate),
-//            formatSalaryTables(teacherOutput),
-//            formatMailFooter(teacherOutput)
-//    );
-    throw new RuntimeException();
-  }
-
-  public FormattedOutput_2 formatTeacherOutput_2(String teacherName, TeacherOutput teacherOutput, String reciptTo) {
-
     String outputDate = extractDate(teacherOutput);
     SentenceContainer header = formatMailHeader(reciptTo, outputDate);
     SentenceContainer footer = formatMailFooter(teacherOutput.totalPayment);
     String entireHtml = tableFormatter.toEntireHtml(teacherOutput.classNameToSalariesInfo.values(), header, footer);
 
-    return FormattedOutput_2.create(
+    return FormattedOutput.create(
             formatSubjectLine(teacherName, outputDate),
             header,
             formatSalaryTables(teacherOutput),

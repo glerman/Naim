@@ -3,6 +3,7 @@ package logic;
 import com.google.common.collect.*;
 import domain.SalaryInfo;
 import domain.TeacherOutput;
+import domain.TeacherRegistry;
 import parse.SalaryInfoParser;
 
 import java.util.*;
@@ -10,9 +11,10 @@ import java.util.stream.Collectors;
 
 public class SalariesLogic {
 
-  private Multimap<String, SalaryInfo> salariesRegistry;
+  private final TeacherRegistry teacherRegistry;
+  private final Multimap<String, SalaryInfo> salariesRegistry;
 
-  public SalariesLogic(final Object[][] salariesData) {
+  public SalariesLogic(final Object[][] salariesData, TeacherRegistry teacherRegistry) {
 
     SalaryInfoParser parser = new SalaryInfoParser();
     List<SalaryInfo> salariesInfo = Lists.newArrayList(salariesData).
@@ -22,6 +24,7 @@ public class SalariesLogic {
             map(Optional::get).
             collect(Collectors.toList());
     salariesRegistry = Multimaps.index(salariesInfo, SalaryInfo::getTeacherName);
+    this.teacherRegistry = teacherRegistry;
   }
 
   /**
@@ -40,7 +43,8 @@ public class SalariesLogic {
               stream().
               mapToInt(SalaryInfo::getPayment).
               sum();
-      TeacherOutput singleTeacherOutput = new TeacherOutput(classNameToSalariesInfoSingleTeacher, totalPaymentSingleTeacher);
+      String teacherMessage = teacherRegistry.getTeacher(teacherName).getMessage();
+      TeacherOutput singleTeacherOutput = new TeacherOutput(classNameToSalariesInfoSingleTeacher, totalPaymentSingleTeacher, teacherMessage);
       allTeacherOutputs.put(teacherName, singleTeacherOutput);
     }
     return allTeacherOutputs;

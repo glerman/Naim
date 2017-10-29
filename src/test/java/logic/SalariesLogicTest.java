@@ -1,9 +1,9 @@
 package logic;
 
 import com.google.common.collect.Lists;
-import dnl.utils.text.table.TextTable;
 import domain.SalaryInfo;
 import domain.TeacherOutput;
+import domain.TeacherRegistry;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,6 @@ import parse.CsvResult;
 import parse.SalaryInfoParser;
 import util.InputReaderHelper;
 
-import javax.swing.table.TableModel;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +25,10 @@ public class SalariesLogicTest {
   public void setUp() throws Exception {
 
     CsvResult salariesData = InputReaderHelper.readCsv(InputReaderHelper.salariesFilePath);
+    CsvResult teacherData = InputReaderHelper.readCsv(InputReaderHelper.teachersFilePath);
+    TeacherRegistry teacherRegistry = new TeacherRegistry();
+    teacherRegistry.registerTeachers(teacherData.data)
+    ;
     SalaryInfoParser salaryInfoParser = new SalaryInfoParser();
     groupedSalaryInfo = Lists.newArrayList(salariesData.data).
             stream().
@@ -34,7 +37,7 @@ public class SalariesLogicTest {
             collect(Collectors.groupingBy(
                     SalaryInfo::getTeacherId,
                     Collectors.toList()));
-    salariesLogic = new SalariesLogic(salariesData.data);
+    salariesLogic = new SalariesLogic(salariesData.data, teacherRegistry);
   }
 
   @Test

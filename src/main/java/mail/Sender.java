@@ -3,7 +3,7 @@ package mail;
 import com.google.api.client.util.Base64;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
-import view.FormattedOutput_2;
+import view.FormattedOutput;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -32,7 +32,7 @@ public class Sender {
 
 
   public Message sendMail(String to,
-                          FormattedOutput_2 formattedTeacherOutput) throws MessagingException, IOException {
+                          FormattedOutput formattedTeacherOutput) throws MessagingException, IOException {
 
     MimeMessage email = createEmail(to, fromEmail, formattedTeacherOutput);
     return sendMessage(gmail, "me", email);
@@ -49,7 +49,7 @@ public class Sender {
    */
   private static MimeMessage createEmail(String to,
                                          String from,
-                                         FormattedOutput_2 formattedTeacherOutput) throws MessagingException {
+                                         FormattedOutput formattedTeacherOutput) throws MessagingException {
     Properties props = new Properties();
     Session session = Session.getDefaultInstance(props, null);
 
