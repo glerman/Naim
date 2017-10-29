@@ -31,6 +31,7 @@ public class FileReader {
       lines = lines.
               stream().
               filter(StringUtils::isNotEmpty).
+              map(String::trim).
               collect(Collectors.toList());
       return Optional.of(lines);
     }
