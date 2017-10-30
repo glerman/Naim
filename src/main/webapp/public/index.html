@@ -23,14 +23,19 @@
             $.getJSON(url, function(data) {
                 var report = data["report"];
                 if (report) {
-                    var reportBody = $('#reportBody');
-                    displayResponse(report, reportBody);
+                    displayResponse(report, $('#reportBody'));
                 }
                 var preview = data["salariesPreview"];
                 if (preview) {
-                    var previewBody = $('#previewBody');
-                    displayResponse(preview, previewBody);
+                    displayResponse(preview, $('#previewBody'));
                 }
+            }).fail(function (data) {
+                var errorMsg = "Error";
+                if (data.status === 404) {
+                    errorMsg += "<br>Check if server is up"
+                }
+                errorMsg += "<br>" + data.responseText;
+                displayResponse(errorMsg, $('#reportBody'));
             });
         }
 
