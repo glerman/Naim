@@ -32,7 +32,7 @@
             }).fail(function (data) {
                 var errorMsg = "<h1>Error</h1>";
                 errorMsg += "<br><h1>Check if server is up</h1>"
-                if (data.responseText) {
+                if (data.responseText) { //todo: I made a (nice to have) change here and it's not reflected in the jar. Why?
                     errorMsg += "<br>" + data.responseText;
                 }
                 displayResponse(errorMsg, $('#reportBody'));
