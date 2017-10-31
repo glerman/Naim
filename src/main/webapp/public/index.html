@@ -31,10 +31,10 @@
                 }
             }).fail(function (data) {
                 var errorMsg = "<h1>Error</h1>";
-                if (data.status === 404) {
-                    errorMsg += "<br><h1>Check if server is up</h1>"
+                errorMsg += "<br><h1>Check if server is up</h1>"
+                if (data.responseText) {
+                    errorMsg += "<br>" + data.responseText;
                 }
-                errorMsg += "<br>" + data.responseText;
                 displayResponse(errorMsg, $('#reportBody'));
             });
         }
