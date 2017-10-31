@@ -11,7 +11,7 @@
 
         function execute(salariesFile, teachersFile, messagesFile, receiptTo, teachersToIterate, sendMails, sendFromNaim) {
 
-           hideOutputPanels();
+           outputPanelsOnExecute();
            var queryParams = "salariesFilePath=" + salariesFile;
            queryParams += "&teacherFilePath=" + teachersFile;
            queryParams += "&messagesFilePath=" + messagesFile;
@@ -30,26 +30,27 @@
                     displayResponse(preview, $('#previewBody'));
                 }
             }).fail(function (data) {
-                var errorMsg = "Error";
+                var errorMsg = "<h1>Error</h1>";
                 if (data.status === 404) {
-                    errorMsg += "<br>Check if server is up"
+                    errorMsg += "<br><h1>Check if server is up</h1>"
                 }
                 errorMsg += "<br>" + data.responseText;
                 displayResponse(errorMsg, $('#reportBody'));
             });
         }
 
-        function hideOutputPanels() {
+        function outputPanelsOnExecute() {
             var previewBody = $('#previewBody');
             previewBody.empty();
             previewBody.parent().hide();
 
             var reportBody = $('#reportBody');
             reportBody.empty();
-            reportBody.parent().hide();
+            reportBody.append("<h1>" + "Waiting for server response..." + "</h1>");
         }
 
         function displayResponse(response, panelBody) {
+            panelBody.empty();
             response = convertNewLine(response);
             panelBody.append("<p>" + response + "</p>");
             panelBody.parent().show();
