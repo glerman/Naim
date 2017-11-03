@@ -99,7 +99,7 @@ public class AppLogic {
         sender.get().sendMail(
                 teacher.getEmail(),
                 formattedTeacherOutput);
-        Thread.sleep(500); //todo: is this needed?
+        Thread.sleep(500); //todo: implement and test rate limit exptions with exponential backoff
       } catch (Exception e) {
         ReportAggregator.instance.sendMailFailure("Failed to send teacher mail", teacher, formattedTeacherOutput.subject(), e);
       }
