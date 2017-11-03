@@ -46,7 +46,7 @@
 
             var reportBody = $('#reportBody');
             reportBody.empty();
-            reportBody.append("<h1>" + "Waiting for server response..." + "</h1>");
+            reportBody.append("<h1>" + "Working..." + "</h1>");
         }
 
         function displayResponse(response, panelBody) {
@@ -107,6 +107,7 @@
             <input id="sendMails" type="checkbox">Send Mails
         </label>
         <label class="checkbox">
+            <!--todo: make checked and invisible when deployed-->
             <input id="sendFromNaim" type="checkbox">Send From Naim
         </label>
     </div>
