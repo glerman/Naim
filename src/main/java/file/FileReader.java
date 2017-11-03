@@ -20,7 +20,7 @@ public class FileReader {
 
     File file = new File(path);
     if (!file.exists()) {
-      ReportAggregator.instance.ioError("File not found: " + path, null);
+      ReportAggregator.instance.userInputError("File not found: " + path);
       return Optional.empty();
     }
 

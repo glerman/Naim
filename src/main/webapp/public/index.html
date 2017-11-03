@@ -19,7 +19,7 @@
            queryParams += "&sendFromNaim=" + sendFromNaim;
            queryParams += "&teachersToIterate=" + teachersToIterate;
            queryParams += "&receiptTo=" + receiptTo;
-           var url = '/salary?' + queryParams;
+           var url = encodeURI('/salary?' + queryParams); //To escape special chars (like \ in windows filepath)
             $.getJSON(url, function(data) {
                 var report = data["report"];
                 if (report) {
@@ -76,17 +76,17 @@
 
     <span class="input-group col-lg-2" style="alignment: left ;margin: 10px;">
         <span class="input-group-addon">Salaries File Path....</span>
-        <input id="salariesFile" class="form-control" type="text" style="width: 700px;"/>
+        <input id="salariesFile" class="form-control" value="C:\ezshape\salaries.csv" type="text" style="width: 700px;"/>
     </span>
 
     <span class="input-group col-lg-2" style="alignment: left ;margin: 10px;">
         <span class="input-group-addon">Teachers File Path..</span>
-        <input id="teachersFile" class="form-control" type="text" style="width: 700px;"/>
+        <input id="teachersFile" class="form-control" value="C:\ezshape\teachers.csv" type="text" style="width: 700px;"/>
     </span>
 
     <span class="input-group col-lg-2" style="alignment: left ;margin: 10px;">
         <span class="input-group-addon">Messages File Path</span>
-        <input id="messagesFile" class="form-control" type="text" style="width: 700px;"/>
+        <input id="messagesFile" class="form-control" value="C:\ezshape\messages.csv" type="text" style="width: 700px;"/>
     </span>
 
     <span class="input-group col-lg-2" style="alignment: left ;margin: 10px;">

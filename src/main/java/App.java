@@ -20,7 +20,7 @@ public class App {
     } finally {
       System.out.println();
       System.out.println();
-      System.out.println(ReportAggregator.instance.report());
+      System.out.println(ReportAggregator.instance.report(true));
     }
   }
 

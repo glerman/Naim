@@ -31,11 +31,10 @@ public class ReportAggregator {
   private boolean printFullStackTrace;
 
   private ReportAggregator() {
-    init(true);
+    init();
   }
 
-  public void init(boolean debug) {
-    this.printFullStackTrace = debug;
+  public void init() {
     numMailsToSend = 0;
     sentMailAttempt = 0;
     sendMailSuccess = 0;
@@ -54,7 +53,8 @@ public class ReportAggregator {
     teachersWithoutEmail.add(teacherName);
   }
 
-  public String report() {
+  public String report(boolean debug) {
+    printFullStackTrace = debug;
     StringBuilder report = new StringBuilder();
 
     reportCollectionLineByLine(appInput, "App input: ", report);

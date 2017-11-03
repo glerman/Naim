@@ -33,14 +33,15 @@ public class SalaryController {
                      @RequestParam(value = "receiptTo") String receiptTo,
                      @RequestParam(value = "debug", defaultValue = "false") boolean debug) {
 
-    ReportAggregator.instance.init(debug);
+    ReportAggregator.instance.init();
     String salariesPreview = null;
     try {
       AppLogic appLogic = new AppLogic();
       salariesPreview = appLogic.start(salariesFilePath, teacherFilePath, messagesFilePath, charset, sendMails, sendFromNaim, teachersToIterate, receiptTo);
     } catch (Throwable t) {
       ReportAggregator.instance.unexpectedError(t);
+      System.out.println(ReportAggregator.instance.report(true));
     }
-    return new SalaryResponse(salariesPreview, ReportAggregator.instance.report());
+    return new SalaryResponse(salariesPreview, ReportAggregator.instance.report(debug));
   }
 }

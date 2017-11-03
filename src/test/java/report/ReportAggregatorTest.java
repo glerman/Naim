@@ -34,7 +34,7 @@ public class ReportAggregatorTest {
     Assert.assertEquals(1, instance.salaryParsingErrors.size());
     Assert.assertEquals(1, instance.teacherParsingErrors.size());
 
-    System.out.println(instance.report());
+    System.out.println(instance.report(true));
   }
 
   @Test
@@ -45,6 +45,6 @@ public class ReportAggregatorTest {
 
     Assert.assertEquals(3, instance.teachersWithoutEmail.size());
 
-    System.out.println(instance.report());
+    System.out.println(instance.report(true));
   }
 }
