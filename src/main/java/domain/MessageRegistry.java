@@ -35,7 +35,10 @@ public class MessageRegistry {
     }
   }
 
-  public void findDummyMessages(TeacherRegistry teacherRegistry) {
+  /**
+   * Handle messages with unknown teacher
+   */
+  void findDummyMessages(TeacherRegistry teacherRegistry) {
 
     if (teacherRegistry == null) {
       throw new NullPointerException("Teacher registry cannot be null");
@@ -50,7 +53,7 @@ public class MessageRegistry {
             });
   }
 
-  public Message getMessage(final String teacherName) {
+  Message getMessage(final String teacherName) {
     return registry.get(teacherName);
   }
 
