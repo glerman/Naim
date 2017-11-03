@@ -43,7 +43,7 @@ public class SalariesLogic {
               stream().
               mapToInt(SalaryInfo::getPayment).
               sum();
-      String teacherMessage = teacherRegistry.getTeacher(teacherName).getMessage();
+      Optional<String> teacherMessage = teacherRegistry.getTeacher(teacherName).getMessage();
       TeacherOutput singleTeacherOutput = new TeacherOutput(classNameToSalariesInfoSingleTeacher, totalPaymentSingleTeacher, teacherMessage);
       allTeacherOutputs.put(teacherName, singleTeacherOutput);
     }

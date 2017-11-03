@@ -1,6 +1,5 @@
 package view;
 
-import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import domain.SalaryInfo;
 import domain.TeacherOutput;
@@ -10,7 +9,7 @@ import org.joda.time.format.DateTimeFormatter;
 import view.html.HtmlTableFormatter;
 
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.Optional;
 
 //todo: test format via system test
 //todo: too many public methods, only reason is for test can be solved by better design
@@ -37,15 +36,19 @@ public class TeacherOutputFormatter {
             entireHtml);
   }
 
-  public SentenceContainer formatMailHeader(String receiptTo, String outputDate, String teacherMessage) {
+  public SentenceContainer formatMailHeader(String receiptTo, String outputDate, Optional<String> teacherMessage) {
     List<String> sentences = Lists.newArrayList();
     sentences.add(("היי"));
     sentences.add("להלן פירוט תשלומים עבור חודש " + outputDate);
     sentences.add(("נא לרשום על הקבלה / חשבונית עבור " + '"' + receiptTo + "\" " + "על הסכום הנ\"ל"));
     sentences.add(("(בתוספת מע\"מ במידה וצריך)."));
     sentences.add("");
-    sentences.add(teacherMessage);
-    sentences.add("");
+    teacherMessage.ifPresent(message -> {
+      if (!message.isEmpty()) {
+        sentences.add(message);
+        sentences.add("");
+      }
+    });
     sentences.add("דו\"ח שיעורים");
     return SentenceContainer.create(sentences);
   }

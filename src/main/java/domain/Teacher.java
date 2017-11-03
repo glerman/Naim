@@ -3,18 +3,19 @@ package domain;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
+import java.util.Optional;
+
 public class Teacher {
 
   private String name;
   private String email;
-  private String message;
+  @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+  private Optional<String> message;
 
   public Teacher(String name, String email) {
     this.name = name;
     this.email = email;
-  }
-
-  public Teacher() {
+    message = Optional.empty();
   }
 
   public String getName() {
@@ -34,10 +35,10 @@ public class Teacher {
   }
 
   public void setMessage(String message) {
-    this.message = message;
+    this.message = Optional.ofNullable(message);
   }
 
-  public String getMessage() {
+  public Optional<String> getMessage() {
     return message;
   }
 
