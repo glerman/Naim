@@ -21,7 +21,6 @@ public class SalaryController {
   }
 
   //todo: add error controller
-  //todo: support extra file with optional message per teacher
   @RequestMapping("/salary")
   public SalaryResponse salary(@RequestParam(value = "salariesFilePath") String salariesFilePath,
                      @RequestParam(value = "teacherFilePath") String teacherFilePath,
