@@ -2,9 +2,11 @@ package logic;
 
 import com.google.common.collect.*;
 import domain.SalaryInfo;
+import domain.Teacher;
 import domain.TeacherOutput;
 import domain.TeacherRegistry;
 import parse.SalaryInfoParser;
+import report.ReportAggregator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,7 +45,12 @@ public class SalariesLogic {
               stream().
               mapToInt(SalaryInfo::getPayment).
               sum();
-      Optional<String> teacherMessage = teacherRegistry.getTeacher(teacherName).getMessage();
+      Teacher teacher = teacherRegistry.getTeacher(teacherName);
+      if (teacher == null) {
+        ReportAggregator.instance.addTeacherWithoutEmail(teacherName);
+        continue;
+      }
+      Optional<String> teacherMessage = teacher.getMessage();
       TeacherOutput singleTeacherOutput = new TeacherOutput(classNameToSalariesInfoSingleTeacher, totalPaymentSingleTeacher, teacherMessage);
       allTeacherOutputs.put(teacherName, singleTeacherOutput);
     }
