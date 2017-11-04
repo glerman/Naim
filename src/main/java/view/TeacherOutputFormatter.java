@@ -36,7 +36,8 @@ public class TeacherOutputFormatter {
             entireHtml);
   }
 
-  public SentenceContainer formatMailHeader(String receiptTo, String outputDate, Optional<String> teacherMessage) {
+  public SentenceContainer formatMailHeader(String receiptTo, String outputDate,
+                                            @SuppressWarnings("OptionalUsedAsFieldOrParameterType") Optional<String> teacherMessage) {
     List<String> sentences = Lists.newArrayList();
     sentences.add(("היי"));
     sentences.add("להלן פירוט תשלומים עבור חודש " + outputDate);
