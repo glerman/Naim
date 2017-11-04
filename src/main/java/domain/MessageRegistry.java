@@ -23,7 +23,7 @@ public class MessageRegistry {
       String teacher = message.getTeacherName();
       Message prevMessage = registry.put(teacher, message);
       if (prevMessage != null) {
-        ReportAggregator.instance.userInputError("Teacher " + teacher + " has more than one message");
+        ReportAggregator.instance.userInputError("Teacher '" + teacher + "' has more than one message");
       }
     });
   }
@@ -48,7 +48,7 @@ public class MessageRegistry {
             forEach(teacherName -> {
               Teacher teacher = teacherRegistry.getTeacher(teacherName);
               if (teacher == null) {
-                ReportAggregator.instance.userInputError("Teacher " + teacherName + " has a message but no email");
+                ReportAggregator.instance.userInputError("Teacher '" + teacherName + "' has a message but no email");
               }
             });
   }

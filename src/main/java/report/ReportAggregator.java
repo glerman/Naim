@@ -26,7 +26,6 @@ public class ReportAggregator {
   private List<String> userInputErrors;
   private Set<GeneralProblem> sendMailProblems;
   private Set<GeneralProblem> generalProblems;
-  private Set<GeneralProblem> formattingErrors;
   private Set<Throwable> unexpectedErrors;
   private boolean printFullStackTrace;
 
@@ -45,7 +44,6 @@ public class ReportAggregator {
     sendMailProblems = Sets.newHashSet();
     generalProblems = Sets.newHashSet();
     unexpectedErrors = Sets.newHashSet();
-    formattingErrors = Sets.newHashSet();
     userInputErrors = Lists.newArrayList();
   }
 
@@ -68,7 +66,6 @@ public class ReportAggregator {
     reportProblemsCollection(teachersWithoutEmail, "Number of teachers without emails (send wasn't attempted): ", "The teachers without emails are: ", report);
     reportNumber(sentMailAttempt, "Send mail attempts: ", report);
     reportProblemsCollection(sendMailProblems, "Send mail failures: ", "Problems with sending mails were: ", report);
-    reportProblemsCollection(formattingErrors, "Formatting errors: ", "Formatting errors were: ", report);
     return report.toString();
   }
 
@@ -134,9 +131,7 @@ public class ReportAggregator {
   }
 
   public void sendMailFailure(String message, Teacher teacher, String subjectLine, Exception e) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(message).append(" ").append(teacher).append(" ").append(subjectLine).append(" ").append(e);
-    String extendedErrorMessage = sb.toString();
+    String extendedErrorMessage = message + " teacher: '" + teacher + "' subject: '" + subjectLine + "' " + e;
     sendMailProblems.add(GeneralProblem.create(extendedErrorMessage, e));
   }
 
@@ -150,10 +145,6 @@ public class ReportAggregator {
 
   public void unexpectedError(Throwable t) {
     unexpectedErrors.add(t);
-  }
-
-  public void formattingError(String teacherName, Exception e) {
-    formattingErrors.add(GeneralProblem.create(teacherName, e));
   }
 
   public void incSendEmailSuccess() {

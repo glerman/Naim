@@ -20,7 +20,7 @@ public class TeacherRegistry {
     parser.parse(teacherRow).ifPresent(teacher -> {
       Teacher prevTeacher = registry.put(teacher.getName(), teacher);
       if (prevTeacher != null) {
-        ReportAggregator.instance.userInputError("Teacher " + teacher.getName() + " appears more than once in the teachers input");
+        ReportAggregator.instance.userInputError("Teacher '" + teacher.getName() + "' appears more than once in the teachers input");
       }
     });
   }
