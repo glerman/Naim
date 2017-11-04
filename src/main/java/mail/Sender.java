@@ -18,8 +18,8 @@ public class Sender {
   //todo: move to properties file
   private static final String naimSecret = "client_secret_naim.json";
   private static final String galSecret = "client_secret_gal.json";
-  private static String galEmail = "gal.lerman1@gmail.com";
-  private static String naimEmail = "<info@naim.org.il> סטודיו נעים";
+  private final static String galEmail = "gal.lerman1@gmail.com";
+  private final static String naimEmail = "<info@naim.org.il> סטודיו נעים";
 
   private final Gmail gmail;
   private final String fromEmail;
@@ -31,11 +31,11 @@ public class Sender {
   }
 
 
-  public Message sendMail(String to,
-                          FormattedOutput formattedTeacherOutput) throws MessagingException, IOException {
+  public void sendMail(String to,
+                       FormattedOutput formattedTeacherOutput) throws MessagingException, IOException {
 
     MimeMessage email = createEmail(to, fromEmail, formattedTeacherOutput);
-    return sendMessage(gmail, "me", email);
+    sendMessage(gmail, email);
   }
 
   /**
@@ -43,9 +43,7 @@ public class Sender {
    *
    * @param to email address of the receiver
    * @param from email address of the sender, the mailbox account
-   * @param formattedTeacherOutput
    * @return the MimeMessage to be used to send email
-   * @throws MessagingException
    */
   private static MimeMessage createEmail(String to,
                                          String from,
@@ -54,21 +52,6 @@ public class Sender {
     Session session = Session.getDefaultInstance(props, null);
 
     MimeMessage email = new MimeMessage(session);
-//
-//    MimeMultipart multipart = new MimeMultipart();
-//
-//    MimeBodyPart headerBodyPart = new MimeBodyPart();
-//    MimeBodyPart salaryTablesHtmlPart = new MimeBodyPart();
-//    MimeBodyPart footerPart = new MimeBodyPart();
-//
-//    headerBodyPart.setText(formattedTeacherOutput.header());
-//    salaryTablesHtmlPart.setContent(formattedTeacherOutput.salaryTablesHtml(), "text/html");
-//    footerPart.setText(formattedTeacherOutput.footer());
-//
-//    multipart.addBodyPart(headerBodyPart);
-//    multipart.addBodyPart(salaryTablesHtmlPart);
-//    multipart.addBodyPart(footerPart);
-
     email.setFrom(new InternetAddress(from));
     email.addRecipient(javax.mail.Message.RecipientType.TO,
             new InternetAddress(to));
@@ -82,8 +65,6 @@ public class Sender {
    *
    * @param emailContent Email to be set to raw of message
    * @return a message containing a base64url encoded email
-   * @throws IOException
-   * @throws MessagingException
    */
   private static Message createMessageWithEmail(MimeMessage emailContent)
           throws MessagingException, IOException {
@@ -100,20 +81,12 @@ public class Sender {
    * Send an email from the user's mailbox to its recipient.
    *
    * @param service Authorized Gmail API instance.
-   * @param userId User's email address. The special value "me"
-   * can be used to indicate the authenticated user.
    * @param emailContent Email to be sent.
-   * @return The sent message
-   * @throws MessagingException
-   * @throws IOException
    */
-  private static Message sendMessage(Gmail service,
-                                    String userId,
-                                    MimeMessage emailContent)
+  private static void sendMessage(Gmail service,
+                                  MimeMessage emailContent)
           throws MessagingException, IOException {
     Message message = createMessageWithEmail(emailContent);
-    message = service.users().messages().send(userId, message).execute();
-
-    return message;
+    service.users().messages().send("me", message).execute();
   }
 }

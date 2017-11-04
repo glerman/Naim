@@ -85,7 +85,8 @@ public class AppLogic {
     return Optional.of(salariesLogic.createTeacherOutputs());
   }
 
-  private void formatAndSendTeacher(String teacherName, TeacherOutput teacherOutput, Optional<Sender> sender,
+  private void formatAndSendTeacher(String teacherName, TeacherOutput teacherOutput,
+                                    @SuppressWarnings("OptionalUsedAsFieldOrParameterType") Optional<Sender> senderOptional,
                                     String receiptTo) {
     Teacher teacher = teacherRegistry.getTeacher(teacherName);
     if (teacher == null) {
@@ -93,10 +94,10 @@ public class AppLogic {
       return;
     }
     FormattedOutput formattedTeacherOutput = formatter.formatTeacherOutput(teacherName, teacherOutput, receiptTo);
-    if (sender.isPresent()) {
+    senderOptional.ifPresent(sender -> {
       try {
         ReportAggregator.instance.incSendMailAttempt();
-        sender.get().sendMail(
+        sender.sendMail(
                 teacher.getEmail(),
                 formattedTeacherOutput);
         Thread.sleep(500); //todo: implement and test rate limit exptions with exponential backoff
@@ -104,7 +105,7 @@ public class AppLogic {
         ReportAggregator.instance.sendMailFailure("Failed to send teacher mail", teacher, formattedTeacherOutput.subject(), e);
       }
       ReportAggregator.instance.incSendEmailSuccess();
-    }
+    });
     appendToPreview(teacher, formattedTeacherOutput);
   }
 
