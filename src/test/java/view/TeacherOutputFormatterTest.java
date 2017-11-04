@@ -52,6 +52,12 @@ public class TeacherOutputFormatterTest {
     Assert.assertEquals(6, header.sentences().size());
   }
 
+  @Test
+  public void testSubjectLine() throws Exception {
+    String subjectLine = underTest.formatSubjectLine("גל לרמן", "10/2017");
+    System.out.println(subjectLine);
+    Assert.assertEquals("גל לרמן פירוט תשלום עבור חודש - 10/2017", subjectLine);
+  }
 
   @Test
   public void testTeacherMessage() throws Exception {

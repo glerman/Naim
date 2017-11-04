@@ -76,7 +76,7 @@ public class TeacherOutputFormatter {
     return SentenceContainer.create(sentences);
   }
 
-  private String formatSubjectLine(String teacherName, String outputDate) {
-    return String.format("%s - פירוט תשלום עבור חודש %s", outputDate, teacherName);
+  String formatSubjectLine(String teacherName, String outputDate) {
+    return String.format("%s פירוט תשלום עבור חודש - %s", teacherName, outputDate); //reversed param order due to Hebrew
   }
 }
