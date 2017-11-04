@@ -7,27 +7,26 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
-
-import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.Gmail;
+import com.google.api.services.gmail.GmailScopes;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class GmailServiceProvider {
+class GmailServiceProvider {
   /** Application name. */
   private static final String APPLICATION_NAME =
           "Gmail API Java mail.GmailServiceProvider";
 
   /** Directory to store user credentials for this application. */
   private static final java.io.File DATA_STORE_DIR = new java.io.File(
-          System.getProperty("user.home"), ".credentials/gmail-java-quickstart");
+          System.getProperty("user.home"), ".credentials/naim-mail");
 
   /** Global instance of the {@link FileDataStoreFactory}. */
   private static FileDataStoreFactory DATA_STORE_FACTORY;
@@ -42,10 +41,9 @@ public class GmailServiceProvider {
   /** Global instance of the scopes required by this quickstart.
    *
    * If modifying these scopes, delete your previously saved credentials
-   * at ~/.credentials/gmail-java-quickstart
    */
   private static final List<String> SCOPES =
-          Arrays.asList(GmailScopes.GMAIL_SEND);
+          Collections.singletonList(GmailScopes.GMAIL_SEND);
 
   static {
     try {
@@ -60,10 +58,8 @@ public class GmailServiceProvider {
   /**
    * Creates an authorized Credential object.
    * @return an authorized Credential object.
-   * @throws IOException
-   * @param clientSecretFileName
    */
-  public static Credential authorize(String clientSecretFileName) throws IOException {
+  private static Credential authorize(String clientSecretFileName) throws IOException {
     // Load client secrets.
     InputStream in =
             GmailServiceProvider.class.getResourceAsStream("/" + clientSecretFileName);
@@ -87,10 +83,8 @@ public class GmailServiceProvider {
   /**
    * Build and return an authorized Gmail client service.
    * @return an authorized Gmail client service
-   * @throws IOException
-   * @param clientSecretFileName
    */
-  public static Gmail getGmailService(String clientSecretFileName) throws IOException {
+  static Gmail getGmailService(String clientSecretFileName) throws IOException {
     Credential credential = authorize(clientSecretFileName);
     return new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
             .setApplicationName(APPLICATION_NAME)
