@@ -6,10 +6,12 @@ import domain.TeacherOutput;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import view.html.HtmlTableFormatter;
+import view.html.HtmlOutputFormatter;
+import view.html.HtmlUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 //todo: test format via system test
 //todo: too many public methods, only reason is for test can be solved by better design
@@ -18,10 +20,11 @@ public class TeacherOutputFormatter {
   private static DateTimeFormatter inputDtf = DateTimeFormat.forPattern("dd/MM/yyyy");
   private static DateTimeFormatter outputDtf = DateTimeFormat.forPattern("MM/yyyy");
 
-  private final HtmlTableFormatter tableFormatter;
+  private final HtmlOutputFormatter tableFormatter;
 
   public TeacherOutputFormatter() {
-    tableFormatter = new HtmlTableFormatter();
+    Function<String,String> htmlTransformer = html -> HtmlUtils.prepareForEmail(html, "th, td, p");
+    tableFormatter = new HtmlOutputFormatter(htmlTransformer);
   }
 
   public FormattedOutput formatTeacherOutput(String teacherName, TeacherOutput teacherOutput, String reciptTo) {

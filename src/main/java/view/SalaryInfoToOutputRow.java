@@ -2,6 +2,8 @@ package view;
 
 import com.google.common.collect.Lists;
 import domain.SalaryInfo;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ public class SalaryInfoToOutputRow implements Function<SalaryInfo, List<Object>>
   @Override
   public List<Object> apply(SalaryInfo i) {
     List<Object> outputRow = Lists.newArrayList(i.getClassName(), i.getRoom(),
-            i.getDate(), i.getAttendees(), i.getPayment());
+            i.getDisplayDate(), i.getAttendees(), i.getPayment());
     return Lists.reverse(outputRow); //Reverse output because Hebrew is fun...
   }
 }

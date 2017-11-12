@@ -11,12 +11,12 @@ import org.jsoup.select.Elements;
 import javax.validation.constraints.Null;
 import java.util.StringTokenizer;
 
-class HtmlUtils {
+public class HtmlUtils {
 
   private final static String style = "style";
   private static final String delims = "{}";
 
-  static String prepareForEmail(final String html, String tagsToSearch) {
+  public static String prepareForEmail(final String html, String tagsToSearch) {
     Document doc = htmlToDocument(html);
 
     inlineCss(doc);

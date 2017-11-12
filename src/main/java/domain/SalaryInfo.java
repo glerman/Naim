@@ -3,6 +3,7 @@ package domain;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
+@SuppressWarnings("unused")
 public class SalaryInfo {
 
   private int teacherId;
@@ -10,23 +11,29 @@ public class SalaryInfo {
   private String className;
   private String room;
   private String date;
+  private String hourMinute;
   private int attendees;
   private int payment;
   private Object[] salaryRow;
 
   public SalaryInfo(int teacherId, String teacherName, String className, String room,
-                    String date, int attendees, int payment, Object[] salaryRow) {
+                    String date, String hourMinute, int attendees, int payment, Object[] salaryRow) {
     this.teacherId = teacherId;
     this.teacherName = teacherName;
     this.className = className;
     this.room = room;
     this.date = date;
+    this.hourMinute = hourMinute;
     this.attendees = attendees;
     this.payment = payment;
     this.salaryRow = salaryRow;
   }
 
   public SalaryInfo() {
+  }
+
+  public String getDisplayDate() {
+    return hourMinute + " " + date;
   }
 
   public String getTeacherName() {
@@ -93,6 +100,14 @@ public class SalaryInfo {
     this.payment = payment;
   }
 
+  public String getHourMinute() {
+    return hourMinute;
+  }
+
+  public void setHourMinute(String hourMinute) {
+    this.hourMinute = hourMinute;
+  }
+
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(this)
@@ -101,6 +116,7 @@ public class SalaryInfo {
             .add("className", className)
             .add("room", room)
             .add("date", date)
+            .add("hourMinute", hourMinute)
             .add("attendees", attendees)
             .add("payment", payment)
             .add("salaryRow", salaryRow)
@@ -114,16 +130,17 @@ public class SalaryInfo {
     SalaryInfo that = (SalaryInfo) o;
     return teacherId == that.teacherId &&
             attendees == that.attendees &&
-            Integer.compare(that.payment, payment) == 0 &&
+            payment == that.payment &&
             Objects.equal(teacherName, that.teacherName) &&
             Objects.equal(className, that.className) &&
             Objects.equal(room, that.room) &&
             Objects.equal(date, that.date) &&
+            Objects.equal(hourMinute, that.hourMinute) &&
             Objects.equal(salaryRow, that.salaryRow);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(teacherId, teacherName, className, room, date, attendees, payment, salaryRow);
+    return Objects.hashCode(teacherId, teacherName, className, room, date, hourMinute, attendees, payment, salaryRow);
   }
 }

@@ -15,10 +15,11 @@ public class SalaryInfoParser {
       String className = ((String) salaryRow[4]).trim();
       String room = ((String) salaryRow[5]).trim();
       String date = ((String) salaryRow[7]).trim();
+      String hourMinute = ((String) salaryRow[8]).trim();
       int attendees = Integer.parseInt(((String) salaryRow[10]).trim());
-      Integer ratePerAttendee = Integer.parseInt(((String) salaryRow[11]).trim());
+      Integer payment = Integer.parseInt(((String) salaryRow[11]).trim());
 
-      SalaryInfo salaryInfo = new SalaryInfo(teacherId, teacherName, className, room, date, attendees, ratePerAttendee, salaryRow);
+      SalaryInfo salaryInfo = new SalaryInfo(teacherId, teacherName, className, room, date, hourMinute, attendees, payment, salaryRow);
       return Optional.of(salaryInfo);
     } catch (Exception e) {
       ReportAggregator.instance.salaryParsingError(salaryRow, e);

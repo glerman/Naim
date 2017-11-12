@@ -14,15 +14,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
-public class HtmlTableFormatterTest {
+public class HtmlOutputFormatterTest {
 
-  private HtmlTableFormatter formatter;
+  private HtmlOutputFormatter formatter;
   private TeacherOutputFormatter dataHelper;
 
   @Before
   public void setUp() throws Exception {
-    formatter = new HtmlTableFormatter();
+    formatter = new HtmlOutputFormatter(Function.identity());
     dataHelper = new TeacherOutputFormatter();
   }
 

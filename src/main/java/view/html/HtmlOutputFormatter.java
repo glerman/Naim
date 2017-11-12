@@ -21,19 +21,20 @@ import static j2html.TagCreator.head;
 import static j2html.TagCreator.html;
 import static j2html.TagCreator.meta;
 import static j2html.TagCreator.p;
-import static j2html.TagCreator.select;
 import static j2html.TagCreator.style;
 import static j2html.TagCreator.table;
 import static j2html.TagCreator.text;
 import static j2html.TagCreator.tr;
 
-public class HtmlTableFormatter {
+public class HtmlOutputFormatter {
 
   private static final String[] OUTPUT_COLUMNS = {"תעריף","משתתפים","תאריך","אולם","כיתה"};
 
+  private final Function<String, String> htmlTransformer;
   private final Function<SalaryInfo, List<Object>> salaryInfoToOutputRow;
 
-  public HtmlTableFormatter() {
+  public HtmlOutputFormatter(Function<String, String> htmlTransformer) {
+    this.htmlTransformer = htmlTransformer;
     salaryInfoToOutputRow = new SalaryInfoToOutputRow();
   }
 
@@ -78,6 +79,7 @@ public class HtmlTableFormatter {
 
   public String toEntireHtml(Collection<Collection<SalaryInfo>> salariesPerClass, SentenceContainer formatMailHeader, SentenceContainer formatMailFooter) {
     String html = builtEntireHtml(salariesPerClass, Lists.newArrayList(OUTPUT_COLUMNS), formatMailHeader, formatMailFooter);
-    return HtmlUtils.prepareForEmail(html, "th, td, p");
+    return htmlTransformer.apply(html);
   }
+
 }
