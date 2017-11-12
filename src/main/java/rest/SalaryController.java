@@ -21,6 +21,8 @@ public class SalaryController {
   }
 
   //todo: add error controller
+  //todo(major): move to from-emails to properties and remove sendFromNaim from UI. will be chosen by env property. Give the run script the prod env.
+  //todo(major): support the naim input file charsets (iso-8859-1 , pending verification on teachers file) by default, leave charset in UI for on-site-debugging
   @RequestMapping("/salary")
   public SalaryResponse salary(@RequestParam(value = "salariesFilePath") String salariesFilePath,
                      @RequestParam(value = "teacherFilePath") String teacherFilePath,

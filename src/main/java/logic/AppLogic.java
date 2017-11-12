@@ -74,7 +74,9 @@ public class AppLogic {
       //reason already logged
       return Optional.empty();
     }
+    //noinspection ConstantConditions
     CsvResult parsedSalaries = salaryLines.map(csvParser::parse).get();
+    //noinspection ConstantConditions
     CsvResult parsedTeachers = teacherLines.map(csvParser::parse).get();
     Optional<MessageRegistry> messageRegistry = messageLines.
             map(csvParser::parse).
@@ -100,7 +102,7 @@ public class AppLogic {
         sender.sendMail(
                 teacher.getEmail(),
                 formattedTeacherOutput);
-        Thread.sleep(500); //todo: implement and test rate limit exptions with exponential backoff
+        Thread.sleep(500); //todo(mid): implement and test rate limit exptions with exponential backoff
       } catch (Exception e) {
         ReportAggregator.instance.sendMailFailure("Failed to send teacher mail", teacher, formattedTeacherOutput.subject(), e);
       }
@@ -110,11 +112,10 @@ public class AppLogic {
   }
 
   //todo: change to a list of objects, each object holds address, subject and entire html. when getting the response we'll align the address and subject to the right (inline) and the entire html will align itself
-  private void appendToPreview(Teacher teacher, FormattedOutput formattedTeacherOutput) {
+  private void appendToPreview(@SuppressWarnings("unused") Teacher teacher, FormattedOutput formattedTeacherOutput) {
 //    previewBuilder.append(teacher.getEmail()).append("\n"); //todo: first email isn't shown (html issue)
 //    previewBuilder.append(formattedTeacherOutput.subject()).append("\n");
     previewBuilder.append(formattedTeacherOutput.entireHtml());
-    previewBuilder.append("\n\n\n");
   }
 
   private boolean validInput(String salariesFilePath, String teacherFilePath, String charset, String receiptTo) {

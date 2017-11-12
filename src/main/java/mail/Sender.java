@@ -15,7 +15,6 @@ import java.util.Properties;
 
 public class Sender {
 
-  //todo: move to properties file
   private static final String naimSecret = "client_secret_naim.json";
   private static final String galSecret = "client_secret_gal.json";
   private final static String galEmail = "gal.lerman1@gmail.com";
