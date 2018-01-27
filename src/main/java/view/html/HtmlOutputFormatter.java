@@ -1,6 +1,7 @@
 package view.html;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
 import domain.SalaryInfo;
 import j2html.TagCreator;
 import j2html.attributes.Attr;
@@ -9,7 +10,10 @@ import j2html.tags.DomContent;
 import view.SalaryInfoToOutputRow;
 import view.SentenceContainer;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -67,9 +71,12 @@ public class HtmlOutputFormatter {
   }
 
   private ContainerTag generateClassTable(Collection<SalaryInfo> teacherSalaries, List<String> columnNamesList) {
+    List<SalaryInfo> sortedSalaries = Lists.newArrayList(teacherSalaries);
+    sortedSalaries.sort((s1, s2) -> String.CASE_INSENSITIVE_ORDER.compare(s1.getDate(), s2.getDate()));
+
     return table(
             tr(each(columnNamesList, TagCreator::th)),
-            each(teacherSalaries, salaryInfo -> {
+            each(sortedSalaries, salaryInfo -> {
               DomContent tds = each(salaryInfoToOutputRow.apply(salaryInfo),
                       cellDataObject -> TagCreator.td(cellDataObject.toString()));
               return tr(tds);
