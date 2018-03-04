@@ -34,10 +34,11 @@ public class App {
     TeachersToIterate teachersToIterate = TeachersToIterate.valueOf(args[5]);
     String receiptTo = args[6];
     String messagesPath = args[7];
+    String messagesCharset = args[8];
 
     AppLogic appLogic = new AppLogic();
     appLogic.start(salariesFilePath, teacherFilePath, messagesPath, charset,
-            sendMails, sendFromNaim, teachersToIterate, receiptTo);
+            sendMails, sendFromNaim, teachersToIterate, receiptTo, messagesCharset);
   }
 
 }

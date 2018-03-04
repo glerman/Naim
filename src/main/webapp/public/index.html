@@ -9,7 +9,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <script type="text/javascript" charset="utf-8">
 
-        function execute(salariesFile, teachersFile, messagesFile, receiptTo, teachersToIterate, sendMails, sendFromNaim) {
+        function execute(salariesFile, teachersFile, messagesFile, receiptTo, teachersToIterate, sendMails, sendFromNaim, messagesCharset) {
 
            outputPanelsOnExecute();
            var queryParams = "salariesFilePath=" + salariesFile;
@@ -19,6 +19,7 @@
            queryParams += "&sendFromNaim=" + sendFromNaim;
            queryParams += "&teachersToIterate=" + teachersToIterate;
            queryParams += "&receiptTo=" + receiptTo;
+           queryParams += "&messagesCharset=" + messagesCharset;
            var url = encodeURI('/salary?' + queryParams); //To escape special chars (like \ in windows filepath)
             $.getJSON(url, function(data) {
                 var report = data["report"];
@@ -59,6 +60,12 @@
         function convertNewLine(str) {
             return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
         }
+
+        $(".dropdown-menu li a").click(function(){
+            var selText = $(this).text();
+            $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+        });
+
     </script>
 </head>
 
@@ -87,6 +94,13 @@
     <span class="input-group col-lg-2" style="alignment: left ;margin: 10px;">
         <span class="input-group-addon">Messages File Path</span>
         <input id="messagesFile" class="form-control" value="C:\NaimMail\messages.csv" type="text" style="width: 700px;"/>
+
+        <select id="messagesCharset" class="form-control">
+            <option value="Windows-1255">Windows-1255</option>
+            <option value="UTF-8">UTF-8</option>
+            <option value="UTF-16">UTF-16</option>
+            <option value="ISO-8859-1">ISO-8859-1</option>
+        </select>
     </span>
 
     <span class="input-group col-lg-2" style="alignment: left ;margin: 10px;">
@@ -127,9 +141,11 @@
                   var messagesFile = $('#messagesFile').val();
                   var receiptTo = $('#receiptTo').val();
                   var teachersToIterate = $('#teachersToIterate').val();
+                  var messagesCharset = $('#messagesCharset').val();
                   var sendMails = document.getElementById('sendMails').checked;
                   var sendFromNaim = document.getElementById('sendFromNaim').checked;
-                  execute(salariesFile, teachersFile, messagesFile, receiptTo, teachersToIterate, sendMails, sendFromNaim);
+                  console.info($('#salaryCharset').text);
+                  execute(salariesFile, teachersFile, messagesFile, receiptTo, teachersToIterate, sendMails, sendFromNaim, messagesCharset);
     ">
     Execute
     </a>

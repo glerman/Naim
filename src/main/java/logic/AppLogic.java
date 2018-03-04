@@ -29,13 +29,13 @@ public class AppLogic {
 
   public String start(String salariesFilePath, String teacherFilePath, String messagesFilePath,
                       String charset, boolean sendMails, boolean sendFromNaim, TeachersToIterate teachersToIterate,
-                      String receiptTo) {
+                      String receiptTo, final String messagesCharset) {
 
-    if (!validInput(salariesFilePath, teacherFilePath, charset, receiptTo)) {
+    if (!validInput(salariesFilePath, teacherFilePath, charset, receiptTo, messagesCharset)) {
       //reason already logged
       return "";
     }
-    createTeacherOutputs(salariesFilePath, teacherFilePath, messagesFilePath, charset).
+    createTeacherOutputs(salariesFilePath, teacherFilePath, messagesFilePath, charset, messagesCharset).
             ifPresent(outputs -> sendTeacherOutput(sendMails, sendFromNaim, teachersToIterate, receiptTo, outputs));
     return previewBuilder.toString();
   }
@@ -63,13 +63,13 @@ public class AppLogic {
     }
   }
 
-  private Optional<Map<String, TeacherOutput>> createTeacherOutputs(String salariesFilePath, String teacherFilePath, String messagesFilePath, String charset) {
+  private Optional<Map<String, TeacherOutput>> createTeacherOutputs(String salariesFilePath, String teacherFilePath, String messagesFilePath, String charset, final String messagesCharset) {
 
     Optional<List<String>> salaryLines = fileReader.read(salariesFilePath, charset);
     Optional<List<String>> teacherLines = fileReader.read(teacherFilePath, charset);
     Optional<List<String>> messageLines = StringUtils.isEmpty(messagesFilePath) ?
             Optional.empty() :
-            fileReader.read(messagesFilePath, charset);
+            fileReader.read(messagesFilePath, messagesCharset);
     if (!salaryLines.isPresent() || !teacherLines.isPresent()) {
       //reason already logged
       return Optional.empty();
@@ -118,7 +118,7 @@ public class AppLogic {
     previewBuilder.append(formattedTeacherOutput.entireHtml());
   }
 
-  private boolean validInput(String salariesFilePath, String teacherFilePath, String charset, String receiptTo) {
+  private boolean validInput(String salariesFilePath, String teacherFilePath, String charset, String receiptTo, final String messagesCharset) {
 
     if (StringUtils.isEmpty(salariesFilePath)) {
       ReportAggregator.instance.userInputError("Missing salaries file path");
@@ -130,6 +130,10 @@ public class AppLogic {
     }
     if (StringUtils.isEmpty(charset)) {
       ReportAggregator.instance.userInputError("Missing charset input");
+      return false;
+    }
+    if (StringUtils.isEmpty(messagesCharset)) {
+      ReportAggregator.instance.userInputError("Missing messages charset");
       return false;
     }
     if (StringUtils.isEmpty(receiptTo)) {
